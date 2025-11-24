@@ -28,7 +28,7 @@ export default function ChatsPage() {
             {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Luna Rouge" />}
             <AvatarFallback>L</AvatarFallback>
           </Avatar>
-          <h2 className="mt-4 text-2xl font-bold text-primary animate-[pulse_2s_infinite] [text-shadow:0_0_10px_hsl(var(--primary))]">
+          <h2 className="mt-4 text-2xl font-bold text-white animate-[pulse_2s_infinite] [text-shadow:0_0_10px_hsl(var(--primary))]">
             Luna Rouge
           </h2>
           <p className="mt-2 text-slate-400 flex items-center">
