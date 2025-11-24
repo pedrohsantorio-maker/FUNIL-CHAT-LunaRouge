@@ -36,7 +36,7 @@ export default function ChatsPage() {
           </p>
           <Button
             onClick={handleChatClick}
-            className="mt-6 w-full bg-primary text-primary-foreground font-bold text-base py-6 rounded-full hover:bg-primary/90 transition-all duration-300 animate-[pulse_1s_infinite] shadow-[0_0_20px_hsl(var(--primary)/0.5)] hover:shadow-[0_0_30px_hsl(var(--primary)/0.7)]"
+            className="mt-6 w-full bg-primary text-primary-foreground font-bold text-base py-6 rounded-full hover:bg-primary/90 transition-all duration-300 animate-pulse-subtle shadow-[0_0_20px_hsl(var(--primary)/0.5)] hover:shadow-[0_0_30px_hsl(var(--primary)/0.7)]"
           >
             Conversar com Luna Rouge
           </Button>
