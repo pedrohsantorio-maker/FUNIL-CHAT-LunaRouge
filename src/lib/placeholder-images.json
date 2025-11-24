@@ -1,3 +1,22 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "ster-avatar",
+      "description": "Avatar for the chatbot character Ster",
+      "imageUrl": "https://images.unsplash.com/photo-1557053910-d9eadeed1c58?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2Mzk1OTYyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "age-gate-background",
+      "description": "Blurred background for the age gate screen",
+      "imageUrl": "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxhYnN0cmFjdCUyMHRleHR1cmV8ZW58MHx8fHwxNzYzOTkzNzY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract texture"
+    },
+    {
+      "id": "bot-image-message",
+      "description": "An image sent by the bot in the chat",
+      "imageUrl": "https://images.unsplash.com/photo-1503803548695-c2a7b4a5b875?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxiZWFjaCUyMHN1bnNldHxlbnwwfHx8fDE3NjM5NzEwMjF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beach sunset"
+    }
+  ]
 }
