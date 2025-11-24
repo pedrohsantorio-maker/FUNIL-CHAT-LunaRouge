@@ -10,7 +10,7 @@ import placeholderData from "@/lib/placeholder-images.json";
 interface MessageListProps {
   messages: Message[];
   isTyping: boolean;
-  onOptionSelect: (value: string) => void;
+  onOptionSelect: (value: string, text: string) => void;
 }
 
 const sterAvatar = placeholderData.placeholderImages.find(

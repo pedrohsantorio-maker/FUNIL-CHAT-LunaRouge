@@ -14,7 +14,7 @@ import { ExternalLink } from "lucide-react";
 
 interface MessageBubbleProps {
   message: Message;
-  onOptionSelect?: (value: string) => void;
+  onOptionSelect?: (value: string, text: string) => void;
 }
 
 const botImage = placeholderData.placeholderImages.find(
@@ -74,7 +74,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
               {message.options?.map((option) => (
                 <Button
                   key={option.value}
-                  onClick={() => onOptionSelect?.(option.value)}
+                  onClick={() => onOptionSelect?.(option.value, option.text)}
                   variant="outline"
                   className="justify-start bg-secondary hover:bg-secondary/70"
                 >

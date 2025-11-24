@@ -14,7 +14,7 @@ export function ChatLayout() {
       <MessageList
         messages={messages}
         isTyping={isTyping}
-        onOptionSelect={handleOptionSelect}
+        onOptionSelect={(value, text) => handleOptionSelect(value, text)}
       />
       <ChatInput onSendMessage={addUserMessage} isTyping={isTyping} />
     </div>
