@@ -10,8 +10,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['PT Sans', 'sans-serif'],
-        headline: ['PT Sans', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+        headline: ['Inter', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
@@ -106,7 +107,7 @@ export default {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'message-in': 'message-in 0.3s ease-out',
         'gradient-xy': 'gradient-xy 15s ease infinite',
-        'fade-in-up': 'fade-in-up 0.8s ease-out forwards',
+        'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
       },
     },
   },

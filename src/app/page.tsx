@@ -18,17 +18,22 @@ export default function AgeGatePage() {
   };
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-black p-4 text-white">
-      <div className="flex flex-col items-center gap-8 text-center max-w-lg">
+    <div className="flex h-screen w-screen items-center justify-center bg-black p-4 text-white font-sans">
+      <div
+        className={cn(
+          "flex flex-col items-center gap-8 text-center max-w-lg transition-all duration-500",
+          denied ? "animate-fade-in-up" : ""
+        )}
+      >
         {denied ? (
-          <div className="flex flex-col items-center gap-4 rounded-2xl bg-[#1a1a1a] p-8 border border-orange-500/20">
+          <div className="flex flex-col items-center gap-4 rounded-lg bg-[#111] p-8 border border-orange-500/20 shadow-lg shadow-orange-500/10">
             <h1 className="text-2xl font-bold text-orange-500">Acesso Negado</h1>
             <p className="text-slate-400">
               Você precisa ter 18 anos ou mais para continuar.
             </p>
             <Button
               variant="outline"
-              className="mt-4 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-black"
+              className="mt-4 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-black transition-all duration-300"
               onClick={() => setDenied(false)}
             >
               Voltar
@@ -36,19 +41,19 @@ export default function AgeGatePage() {
           </div>
         ) : (
           <>
-            <h1 className="text-5xl font-bold tracking-tight">
+            <h1 className="text-5xl font-black tracking-tighter animate-fade-in-up [animation-delay:200ms]">
               <span className="text-white">Pronto para receber o </span>
-              <span className="bg-orange-500 text-black rounded-md px-2 ml-1">melhor</span>
+              <span className="bg-[#ff9900] text-black rounded-md px-3 py-1 ml-1">melhor</span>
               <span className="text-white"> conteúdo?</span>
             </h1>
-            <div className="flex flex-col items-center gap-2">
-              <h2 className="text-xl font-semibold text-white">Confirme sua idade</h2>
+            <div className="flex flex-col items-center gap-2 animate-fade-in-up [animation-delay:400ms]">
+              <h2 className="text-lg font-bold text-white">Confirme sua idade</h2>
               <p className="text-slate-400">Você deve ter 18 anos ou mais para continuar.</p>
             </div>
-            <div className="flex w-full max-w-sm flex-col gap-4">
+            <div className="flex w-full max-w-sm flex-col gap-4 animate-fade-in-up [animation-delay:600ms]">
               <Button
                 onClick={handleYes}
-                className="bg-orange-500 text-black font-bold hover:bg-orange-600 text-lg py-6 transition-all duration-300 rounded-md"
+                className="bg-[#ff9900] text-black font-bold hover:bg-[#ffaa22] text-lg py-6 transition-all duration-300 rounded-md shadow-[0_0_20px_rgba(255,153,0,0.5)] hover:shadow-[0_0_30px_rgba(255,153,0,0.7)] animate-[pulse_2s_infinite]"
                 size="lg"
               >
                 Sim, sou maior de 18
@@ -56,7 +61,7 @@ export default function AgeGatePage() {
               <Button
                 onClick={handleNo}
                 variant="secondary"
-                className="bg-[#222] text-white hover:bg-[#333] text-lg py-6 transition-all duration-300 rounded-md"
+                className="bg-[#222] text-slate-300 hover:bg-[#333] hover:text-white text-lg py-6 transition-all duration-300 rounded-md"
                 size="lg"
               >
                 Não sou maior de 18
