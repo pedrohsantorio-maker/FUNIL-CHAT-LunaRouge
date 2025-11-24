@@ -21,7 +21,6 @@ export default function ChatsPage() {
   return (
     <div className="flex flex-col h-screen bg-black text-white p-6 sm:p-8 font-sans">
       <header>
-        <h1 className="text-3xl font-bold">Conversas</h1>
       </header>
       <main className="flex-1 flex items-center justify-center">
         <div className="bg-[#121212] rounded-3xl p-8 max-w-sm w-full flex flex-col items-center text-center shadow-lg">
