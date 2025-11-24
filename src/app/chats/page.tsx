@@ -28,7 +28,7 @@ export default function ChatsPage() {
             {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Luna Rouge" />}
             <AvatarFallback>L</AvatarFallback>
           </Avatar>
-          <h2 className="mt-4 text-2xl font-bold text-white animate-[pulse_2s_infinite] [text-shadow:0_0_10px_hsl(var(--primary))]">
+          <h2 className="mt-4 text-2xl font-bold text-white">
             Luna Rouge
           </h2>
           <p className="mt-2 text-slate-400 flex items-center">
@@ -36,7 +36,7 @@ export default function ChatsPage() {
           </p>
           <Button
             onClick={handleChatClick}
-            className="mt-6 w-full bg-primary text-primary-foreground font-bold text-base py-6 rounded-full hover:bg-primary/90 transition-all duration-300 shadow-[0_0_20px_rgba(255,153,0,0.5)] hover:shadow-[0_0_30px_rgba(255,153,0,0.7)] animate-[pulse_2s_infinite]"
+            className="mt-6 w-full bg-primary text-primary-foreground font-bold text-base py-6 rounded-full hover:bg-primary/90 transition-all duration-300 animate-pulse shadow-[0_0_20px_hsl(var(--primary)/0.5)] hover:shadow-[0_0_30px_hsl(var(--primary)/0.7)]"
           >
             Conversar com Luna Rouge
           </Button>
