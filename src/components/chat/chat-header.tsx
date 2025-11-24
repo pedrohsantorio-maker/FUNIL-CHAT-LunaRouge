@@ -16,13 +16,12 @@ export function ChatHeader() {
          </Button>
       </Link>
       <Avatar className="h-10 w-10 border-2 border-primary">
-        {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Ster" />}
-        <AvatarFallback>S</AvatarFallback>
+        {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Luna Rouge" />}
+        <AvatarFallback>L</AvatarFallback>
       </Avatar>
       <div className="ml-3 flex-1">
-        <p className="text-sm">
-            <span className="font-light text-white">Eternal</span>{' '}
-            <span className="font-bold text-primary">Love</span>
+        <p className="text-sm font-bold text-primary">
+          Luna Rouge
         </p>
         <p className="text-xs text-muted-foreground">online</p>
       </div>

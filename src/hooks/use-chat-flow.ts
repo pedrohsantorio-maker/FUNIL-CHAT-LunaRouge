@@ -13,10 +13,10 @@ const initialMessage: Message = {
   id: "initial-1",
   sender: "bot",
   type: "text",
-  content: "Oi, eu sou a Ster. ✨",
+  content: "Oi, eu sou a Luna Rouge. ✨",
   timestamp: new Date(),
   avatar: sterAvatar,
-  name: "Ster",
+  name: "Luna Rouge",
 };
 
 const secondMessage: Message = {
@@ -26,7 +26,7 @@ const secondMessage: Message = {
   content: "Posso te fazer 2 perguntinhas rápidas?",
   timestamp: new Date(Date.now() + 1000),
   avatar: sterAvatar,
-  name: "Ster",
+  name: "Luna Rouge",
 };
 
 export const useChatFlow = () => {
@@ -49,7 +49,7 @@ export const useChatFlow = () => {
           sender: "bot",
           timestamp: new Date(),
           avatar: sterAvatar,
-          name: "Ster",
+          name: "Luna Rouge",
         },
       ]);
       setIsTyping(false);
@@ -97,6 +97,18 @@ export const useChatFlow = () => {
 
       setMessages([
         ...updatedMessages,
+        {
+          id: `user-${Date.now()}`,
+          sender: "user",
+          type: "text",
+          content: optionText,
+          timestamp: new Date(),
+        },
+      ]);
+    } else {
+       // Fallback for when there are no options to remove, e.g. after a "no" response.
+      setMessages(prev => [
+        ...prev,
         {
           id: `user-${Date.now()}`,
           sender: "user",

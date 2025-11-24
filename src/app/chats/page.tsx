@@ -25,12 +25,11 @@ export default function ChatsPage() {
       <main className="flex-1 flex items-center justify-center">
         <div className="bg-[#121212] rounded-3xl p-8 max-w-sm w-full flex flex-col items-center text-center shadow-lg">
           <Avatar className="h-24 w-24 border-4 border-primary">
-            {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Eternal Love" />}
-            <AvatarFallback>E</AvatarFallback>
+            {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Luna Rouge" />}
+            <AvatarFallback>L</AvatarFallback>
           </Avatar>
-          <h2 className="mt-4 text-2xl">
-            <span className="font-light text-white">Eternal</span>{' '}
-            <span className="font-bold text-primary">Love</span>
+          <h2 className="mt-4 text-2xl font-bold text-primary animate-[pulse_2s_infinite] [text-shadow:0_0_10px_hsl(var(--primary))]">
+            Luna Rouge
           </h2>
           <p className="mt-2 text-slate-400 flex items-center">
             Oi, gostoso... como tá o tesão aí? <Heart className="h-4 w-4 ml-1.5 fill-primary text-primary" />
@@ -39,7 +38,7 @@ export default function ChatsPage() {
             onClick={handleChatClick}
             className="mt-6 w-full bg-primary text-primary-foreground font-bold text-base py-6 rounded-full hover:bg-primary/90 transition-colors duration-300"
           >
-            Conversar com Eternal Love
+            Conversar com Luna Rouge
           </Button>
         </div>
       </main>
