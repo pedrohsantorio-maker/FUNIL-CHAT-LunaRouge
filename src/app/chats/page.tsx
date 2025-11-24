@@ -1,42 +1,48 @@
+"use client";
+
 import Link from "next/link";
+import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import placeholderData from "@/lib/placeholder-images.json";
-import { ChevronRight } from "lucide-react";
+import { Heart } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function ChatsPage() {
+  const router = useRouter();
   const sterAvatar = placeholderData.placeholderImages.find(
     (img) => img.id === "ster-avatar"
   );
 
+  const handleChatClick = () => {
+    router.push("/chat/ster");
+  };
+
   return (
-    <div className="h-screen bg-background text-foreground">
-      <header className="bg-secondary text-foreground p-4 flex items-center shadow-md">
-        <h1 className="text-xl font-bold">Conversas</h1>
+    <div className="flex flex-col h-screen bg-black text-white p-6 sm:p-8 font-sans">
+      <header>
+        <h1 className="text-3xl font-bold">Conversas</h1>
       </header>
-      <main className="p-2">
-        <Link href="/chat/ster">
-          <div className="flex items-center gap-4 p-3 hover:bg-secondary/80 rounded-lg cursor-pointer transition-colors">
-            <Avatar className="h-14 w-14 border-2 border-primary/50">
-              {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Ster" />}
-              <AvatarFallback>S</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 overflow-hidden">
-              <div className="flex justify-between items-center">
-                <h2 className="font-bold text-lg">Ster</h2>
-                <span className="text-xs text-muted-foreground">
-                  {new Date().toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-              </div>
-              <p className="text-sm text-muted-foreground truncate">
-                Oi, eu sou Ster. Posso te fazer...
-              </p>
-            </div>
-            <ChevronRight className="h-6 w-6 text-muted-foreground" />
-          </div>
-        </Link>
+      <main className="flex-1 flex items-center justify-center">
+        <div className="bg-[#121212] rounded-3xl p-8 max-w-sm w-full flex flex-col items-center text-center shadow-lg">
+          <Avatar className="h-24 w-24 border-4 border-[#E94A88]">
+            {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Eternal Love" />}
+            <AvatarFallback>E</AvatarFallback>
+          </Avatar>
+          <h2 className="mt-4 text-2xl">
+            <span className="font-light text-white">Eternal</span>{' '}
+            <span className="font-bold text-[#E94A88]">Love</span>
+          </h2>
+          <p className="mt-2 text-slate-400 flex items-center">
+            Oi, gostoso... como tá o tesão aí? <Heart className="h-4 w-4 ml-1.5 fill-[#E94A88] text-[#E94A88]" />
+          </p>
+          <Button
+            onClick={handleChatClick}
+            className="mt-6 w-full bg-[#E94A88] text-white font-bold text-base py-6 rounded-full hover:bg-pink-500 transition-colors duration-300"
+          >
+            Conversar com Eternal Love
+          </Button>
+        </div>
       </main>
     </div>
   );

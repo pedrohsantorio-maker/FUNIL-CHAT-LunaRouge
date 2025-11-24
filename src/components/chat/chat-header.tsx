@@ -15,12 +15,15 @@ export function ChatHeader() {
            <ArrowLeft/>
          </Button>
       </Link>
-      <Avatar className="h-10 w-10">
+      <Avatar className="h-10 w-10 border-2 border-[#E94A88]">
         {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Ster" />}
         <AvatarFallback>S</AvatarFallback>
       </Avatar>
       <div className="ml-3 flex-1">
-        <p className="text-sm font-bold">Ster</p>
+        <p className="text-sm">
+            <span className="font-light text-white">Eternal</span>{' '}
+            <span className="font-bold text-[#E94A88]">Love</span>
+        </p>
         <p className="text-xs text-muted-foreground">online</p>
       </div>
       <div className="flex items-center gap-2">
