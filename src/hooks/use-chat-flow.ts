@@ -154,7 +154,7 @@ export const useChatFlow = () => {
             content: `Perfeito! Anotado. Para continuar, preciso que você confirme que está pronto para ir para a próxima etapa.`,
           });
           await addBotMessage({
-            id: `bot-options-${step}`,
+            id: `bot-options-${Date.now()}`,
             type: "options",
             content: "Podemos prosseguir?",
             options: [
@@ -168,31 +168,31 @@ export const useChatFlow = () => {
       case 4: // After confirmation, send link or wait
         if (userResponse === "yes") {
           await addBotMessage({
-            id: `bot-${Date.now()}`,
+            id: `bot-generating-${Date.now()}`,
             type: "text",
             content: "Ótimo! Estou gerando seu acesso exclusivo...",
           });
           // Simulate API call
           await new Promise(res => setTimeout(res, 1500));
           await addBotMessage({
-            id: `bot-${Date.now()}`,
+            id: `bot-link-${Date.now()}`,
             type: "link",
             content: "https://checkout.example.com/offer",
           });
           await addBotMessage({
-            id: `bot-${Date.now()}`,
+            id: `bot-followup-${Date.now()}`,
             type: "text",
             content: "Clique no link acima para continuar. Estou te esperando! 😉",
           });
           setStep(5);
         } else {
           await addBotMessage({
-            id: `bot-${Date.now()}`,
+            id: `bot-wait-${Date.now()}`,
             type: "text",
             content: "Tudo bem. Me avise quando estiver pronto! estarei aqui.",
           });
           await addBotMessage({
-            id: `bot-options-${step}`,
+            id: `bot-options-${Date.now()}`,
             type: "options",
             content: "Pronto para continuar?",
             options: [
