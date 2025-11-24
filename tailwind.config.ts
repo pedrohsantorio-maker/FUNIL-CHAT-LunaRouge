@@ -112,7 +112,7 @@ export default {
         'message-in': 'message-in 0.3s ease-out',
         'gradient-xy': 'gradient-xy 15s ease infinite',
         'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
-        'pulse-subtle': 'pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-subtle': 'pulse-subtle 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },
   },
