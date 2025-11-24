@@ -9,13 +9,13 @@ export default function ChatsPage() {
   );
 
   return (
-    <div className="h-screen bg-secondary/40 text-foreground">
-      <header className="bg-primary text-primary-foreground p-4 flex items-center shadow-md">
+    <div className="h-screen bg-background text-foreground">
+      <header className="bg-secondary text-foreground p-4 flex items-center shadow-md">
         <h1 className="text-xl font-bold">Conversas</h1>
       </header>
       <main className="p-2">
         <Link href="/chat/ster">
-          <div className="flex items-center gap-4 p-3 hover:bg-secondary rounded-lg cursor-pointer transition-colors">
+          <div className="flex items-center gap-4 p-3 hover:bg-secondary/80 rounded-lg cursor-pointer transition-colors">
             <Avatar className="h-14 w-14 border-2 border-primary/50">
               {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Ster" />}
               <AvatarFallback>S</AvatarFallback>

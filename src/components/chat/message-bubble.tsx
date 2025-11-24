@@ -76,7 +76,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
                   key={option.value}
                   onClick={() => onOptionSelect?.(option.value)}
                   variant="outline"
-                  className="justify-start"
+                  className="justify-start bg-secondary hover:bg-secondary/70"
                 >
                   {option.text}
                 </Button>
@@ -106,7 +106,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
         className={cn(
           "max-w-[75%] rounded-2xl px-4 py-2",
           isBot
-            ? "bg-card text-card-foreground rounded-bl-none"
+            ? "bg-secondary text-foreground rounded-bl-none"
             : "bg-primary text-primary-foreground rounded-br-none"
         )}
       >

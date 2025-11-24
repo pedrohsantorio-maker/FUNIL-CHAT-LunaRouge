@@ -9,7 +9,7 @@ export function ChatHeader() {
     (img) => img.id === "ster-avatar"
   );
   return (
-    <header className="flex items-center p-3 border-b bg-background shadow-sm">
+    <header className="flex items-center p-3 border-b bg-secondary shadow-sm">
        <Link href="/chats" className="md:hidden mr-2">
          <Button variant="ghost" size="icon">
            <ArrowLeft/>
