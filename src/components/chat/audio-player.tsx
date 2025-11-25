@@ -69,13 +69,13 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({ src }) => {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="flex items-center gap-3 w-full max-w-[250px] bg-pink-500 rounded-full px-4 py-2 text-white">
+    <div className="flex items-center gap-3 w-full max-w-[250px] bg-primary rounded-full px-4 py-2 text-primary-foreground">
       <audio ref={audioRef} src={src} preload="metadata" />
       <Button
         variant="ghost"
         size="icon"
         onClick={togglePlayPause}
-        className="rounded-full bg-transparent text-white hover:bg-white/20 shrink-0 w-8 h-8"
+        className="rounded-full bg-transparent text-primary-foreground hover:bg-white/20 shrink-0 w-8 h-8"
       >
         {isPlaying ? (
           <Pause className="h-5 w-5" />
@@ -84,16 +84,16 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({ src }) => {
         )}
       </Button>
       <div className="flex-grow flex items-center gap-2 cursor-pointer" ref={progressBarRef} onClick={handleProgressClick}>
-        <div className="w-full bg-pink-400/80 rounded-full h-1 relative">
+        <div className="w-full bg-primary-foreground/50 rounded-full h-1 relative">
           <div
-            className="bg-white h-1 rounded-full absolute top-0 left-0"
+            className="bg-primary-foreground h-1 rounded-full absolute top-0 left-0"
             style={{ width: `${progress}%` }}
           >
-            <div className="w-3 h-3 bg-white rounded-full absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2"></div>
+            <div className="w-3 h-3 bg-primary-foreground rounded-full absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2"></div>
           </div>
         </div>
       </div>
-       <span className="text-xs text-white tabular-nums w-10 text-right">
+       <span className="text-xs text-primary-foreground tabular-nums w-10 text-right">
         {formatTime(duration)}
       </span>
     </div>
