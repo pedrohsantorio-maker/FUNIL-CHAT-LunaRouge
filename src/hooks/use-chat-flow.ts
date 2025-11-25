@@ -26,6 +26,13 @@ const initialMessage: Message = {
   name: "Luna Rouge",
 };
 
+const calculateTypingDelay = (text: string) => {
+  const TYPING_SPEED = 50; // ms por caractere
+  const BASE_DELAY = 500; // delay base
+  return Math.min(BASE_DELAY + text.length * TYPING_SPEED, 5000);
+}
+
+
 export const useChatFlow = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -37,7 +44,7 @@ export const useChatFlow = () => {
     async (message: Omit<Message, "sender" | "timestamp">, delay?: number) => {
       setIsTyping(true);
       await new Promise((resolve) =>
-        setTimeout(resolve, delay ?? 1000 + Math.random() * 1000)
+        setTimeout(resolve, delay ?? 1000)
       );
       const newMessage: Message = {
         ...message,
@@ -61,17 +68,6 @@ export const useChatFlow = () => {
     initChat();
   }, []);
 
-  const addUserMessage = async (content: string, type: Message["type"] = "text") => {
-    const newMessage: Message = {
-      id: `user-${Date.now()}`,
-      sender: "user",
-      type,
-      content,
-      timestamp: new Date(),
-    };
-    setMessages((prev) => [...prev, newMessage]);
-    await handleBotResponse(content.toLowerCase());
-  };
 
   const handleOptionSelect = async (value: string, optionText: string) => {
     // Find the message with options and remove them to prevent re-selection
@@ -98,28 +94,30 @@ export const useChatFlow = () => {
   const handleBotResponse = async (userResponse: string) => {
     switch (step) {
       case 2:
+        const msg2Content = "Vi que você me chamou, safado... quer ver o que tenho de mais quente só pra você? 😈 Tenho varias fotinhas e vídeos, tudo bem gostosinho, que vai te deixar louco de tesão…";
         await addBotMessage({
           id: `bot-${Date.now()}`,
           type: "options",
-          content: "Vi que você me chamou, safado... quer ver o que tenho de mais quente só pra você? 😈 Tenho varias fotinhas e vídeos, tudo bem gostosinho, que vai te deixar louco de tesão…",
+          content: msg2Content,
           options: [
             { text: "Claro, me mostra tudo amor! Tô louco pra te ver🔥.", value: "show_all" },
             { text: "Hum, me conta mais antes de me mostrar...", value: "tell_more" },
           ],
-        });
+        }, calculateTypingDelay(msg2Content));
         setStep(3);
         break;
 
       case 3:
+        const msg3Content = "Meu amor, que sorte a sua em, me chamou justamente quando estou em um momento bem quente aqui... 😈 Você aceita um presentinho?";
         await addBotMessage({
           id: `bot-${Date.now()}`,
           type: "options",
-          content: "Meu amor, que sorte a sua em, me chamou justamente quando estou em um momento bem quente aqui... 😈 Você aceita um presentinho?",
+          content: msg3Content,
           options: [
               { text: "Sim, aceito o presentinho!", value: "yes_gift" },
               { text: "Não, obrigado.", value: "no_gift" },
           ]
-        });
+        }, calculateTypingDelay(msg3Content));
         setStep(4);
         break;
 
@@ -131,54 +129,58 @@ export const useChatFlow = () => {
             type: "video",
             content: "https://i.imgur.com/K4IJyip.mp4",
           });
+          const msg4Content = "Essa é só uma prévia, amor... o melhor vem depois🙈.";
           await addBotMessage({
             id: `bot-${Date.now()}`,
             type: "options",
-            content: "Essa é só uma prévia, amor... o melhor vem depois🙈.",
+            content: msg4Content,
             options: [
                 { text: "Porra, essa foi só uma prévia? Me manda mais gostosa😈", value: "more_preview" },
                 { text: "Amei, mas quero ver tudo agora...", value: "see_all_now" },
             ]
-          });
+          }, calculateTypingDelay(msg4Content));
           setStep(5);
         } else {
           setLastStep(4); // Save the current step
+          const msg4ConfirmContent = "Tem certeza que não quer bebe😈?";
           await addBotMessage({
             id: `bot-confirm-${Date.now()}`,
             type: "options",
-            content: "Tem certeza que não quer bebe😈?",
+            content: msg4ConfirmContent,
              options: [
                 { text: "Sim, eu quero o presentinho!", value: "yes_gift" },
                 { text: "Não, obrigado.", value: "no_gift" },
             ]
-          });
+          }, calculateTypingDelay(msg4ConfirmContent));
           setStep(99); // Special step for handling negative confirmation
         }
         break;
         
       case 5:
+         const msg5Content = "Gostou do que viu? Acabei de gravar, to molhadinha aqui pensando em você🙈";
          await addBotMessage({
           id: `bot-${Date.now()}`,
           type: "options",
-          content: "Gostou do que viu? Acabei de gravar, to molhadinha aqui pensando em você🙈",
+          content: msg5Content,
            options: [
                 { text: "Amei delicía, me deixou duro aqui!", value: "loved_it" },
                 { text: "Gostei demais, mas ainda quero ver o que mais tem por aí...", value: "want_more" },
             ]
-        });
+        }, calculateTypingDelay(msg5Content));
         setStep(6);
         break;
 
       case 6:
+        const msg6Content = "Eu sabia que você ia gostar safado, você é do tipo que adora um videozinho de uma novinha safada, né? Quer ver mais...? 😈";
         await addBotMessage({
           id: `bot-${Date.now()}`,
           type: "options",
-          content: "Eu sabia que você ia gostar safado, você é do tipo que adora um videozinho de uma novinha safada, né? Quer ver mais...? 😈",
+          content: msg6Content,
           options: [
             { text: "Eu adoro amor, me manda mais! Quero ver tudo de você.🔥", value: "love_it_2" },
             { text: "Você me deixou curioso, o que mais você tem ai gostosa?", value: "curious" },
           ]
-        });
+        }, calculateTypingDelay(msg6Content));
         setStep(7);
         break;
 
@@ -187,65 +189,70 @@ export const useChatFlow = () => {
           id: `bot-image-${Date.now()}`,
           type: "image",
           content: "https://i.imgur.com/76kuQ9T.jpeg",
-        });
+        }, 1500);
+        const msg7Content = "Gostou dos meus peitos? Essa foi só para te deixar ainda mais duro seu gostoso... O que me diz, quer mais?🔥";
         await addBotMessage({
           id: `bot-${Date.now()}`,
           type: "options",
-          content: "Gostou dos meus peitos? Essa foi só para te deixar ainda mais duro seu gostoso... O que me diz, quer mais?🔥",
+          content: msg7Content,
           options: [
             { text: "Sim, quero mais, me mostra o resto!", value: "yes_more" },
             { text: "Isso tá demais, agora me conta o que vem a seguir...", value: "whats_next" },
           ]
-        });
+        }, calculateTypingDelay(msg7Content));
         setStep(8);
         break;
 
       case 8:
+        const msg8Content = "Gostou mesmo? Agora, me conta, você vai ficar me pedindo ou vai se entregar de vez? 👀";
         await addBotMessage({
             id: `bot-${Date.now()}`,
             type: "options",
-            content: "Gostou mesmo? Agora, me conta, você vai ficar me pedindo ou vai se entregar de vez? 👀",
+            content: msg8Content,
             options: [
                 { text: "Vou me entregar, manda o que você tem de melhor!", value: "surrender" },
                 { text: "Eu vou pedir até você ceder, quero mais de você!", value: "beg_for_it" },
             ]
-        });
+        }, calculateTypingDelay(msg8Content));
         setStep(9);
         break;
 
       case 9:
+        const msg9Content = "Conversar com você está me deixando ainda mais quente... 🥵 O que você quer agora?";
          await addBotMessage({
             id: `bot-${Date.now()}`,
             type: "options",
-            content: "Conversar com você está me deixando ainda mais quente... 🥵 O que você quer agora?",
+            content: msg9Content,
             options: [
                 { text: "Quero ver mais, me deixa ainda mais quente!", value: "see_more_hot" },
                 { text: "Agora, só quero te ter... vem aqui!", value: "want_you_now" },
             ]
-        });
+        }, calculateTypingDelay(msg9Content));
         setStep(10);
         break;
 
       case 10:
+        const msg10Content = "Entre nós, bebê… tô adorando conversar com você, já tô doida pra você me ver bem peladinha, gozando bem gostoso só pra você 😈";
         await addBotMessage({
             id: `bot-text-10-${Date.now()}`,
             type: "text",
-            content: "Entre nós, bebê… tô adorando conversar com você, já tô doida pra você me ver bem peladinha, gozando bem gostoso só pra você 😈",
-        });
+            content: msg10Content,
+        }, calculateTypingDelay(msg10Content));
          await addBotMessage({
             id: `bot-audio-11-${Date.now()}`,
             type: "audio",
             content: "https://thriving-mermaid-fe7406.netlify.app/AUDIO-2025-11-11-16-42-18.mp3",
-        });
+        }, 7000); // 7-second audio delay
+        const msg12Content = "E aí, amor o que você me diz? Tá preparado pra me ter inteirinha pra você? 🔥❤";
         await addBotMessage({
             id: `bot-options-12-${Date.now()}`,
             type: "options",
-            content: "E aí, amor o que você me diz? Tá preparado pra me ter inteirinha pra você? 🔥❤",
+            content: msg12Content,
             options: [
                 { text: "Sim, topo tudo, quero você inteirinha! 😈", value: "yes_all_in" },
                 { text: "Claro, tô pronto pra te ter do jeito que você quiser!", value: "yes_ready" },
             ],
-        });
+        }, calculateTypingDelay(msg12Content));
         setStep(13);
         break;
 
@@ -255,25 +262,27 @@ export const useChatFlow = () => {
             type: "link",
             content: "https://lunavipp.netlify.app/",
             linkTitle: "Luna Exclusivos",
-        });
+        }, 1500);
+        const msg13Content = "Não posso mandar mais fotinhas aqui, mas nesse site tem mais conteúdo gratuito bem sexy só para você, da uma olhada la gostoso, você não vai se arrepender!😘";
         await addBotMessage({
           id: `bot-text-13-${Date.now()}`,
           type: "options",
-          content: "Não posso mandar mais fotinhas aqui, mas nesse site tem mais conteúdo gratuito bem sexy só para você, da uma olhada la gostoso, você não vai se arrepender!😘",
+          content: msg13Content,
           options: [
               { text: "Vou olhar agora meu amor, to ansioso para ver você gozando bem gostoso😈", value: "look_now" },
               { text: "Vou entrar agora, não quero perder seu conteúdo safada😈!", value: "enter_now" },
           ]
-        });
+        }, calculateTypingDelay(msg13Content));
         setStep(14);
         break;
 
       case 14:
+        const msg14Content = "Estou esperando por você, vem ver o que tenho preparado para você... Não vai se arrepender, prometo. DICA: se o gratuito é assim, imagina as fotos e vídeos exclusivos para meus queridos assinantes 😏";
          await addBotMessage({
             id: `bot-final-${Date.now()}`,
             type: "text",
-            content: "Estou esperando por você, vem ver o que tenho preparado para você... Não vai se arrepender, prometo. DICA: se o gratuito é assim, imagina as fotos e vídeos exclusivos para meus queridos assinantes 😏",
-        });
+            content: msg14Content,
+        }, calculateTypingDelay(msg14Content));
         setStep(15); // End of main flow
         break;
 
@@ -281,28 +290,33 @@ export const useChatFlow = () => {
       default:
         // Conversation ended or in an unknown state.
         // Redirect to link if they keep talking.
+        const msgDefaultContent = "Você é insistente, gostei disso... 😉 Mas o que você quer ver mesmo tá lá no site. Clica no link pra não perder tempo!";
         await addBotMessage({
             id: `bot-redirect-loop-${Date.now()}`,
             type: "text",
-            content: "Você é insistente, gostei disso... 😉 Mas o que você quer ver mesmo tá lá no site. Clica no link pra não perder tempo!",
-        });
+            content: msgDefaultContent,
+        }, calculateTypingDelay(msgDefaultContent));
         break;
 
       case 99: // Handles "Tem certeza?"
         if (userResponse === 'yes_gift') {
             setStep(4);
-            await handleBotResponse('yes_gift'); // Re-trigger step 4 with a positive response
+            // Don't await here, let it flow naturally
+            handleBotResponse('yes_gift'); // Re-trigger step 4 with a positive response
         } else {
+            const msg99Content = "Que pena, amor. Se mudar de ideia, é só me chamar. 😉";
             await addBotMessage({
                 id: `bot-wait-${Date.now()}`,
                 type: "text",
-                content: "Que pena, amor. Se mudar de ideia, é só me chamar. 😉",
-            });
+                content: msg99Content,
+            }, calculateTypingDelay(msg99Content));
             setStep(lastStep); // Go back to the step before the confirmation
         }
         break;
     }
   };
 
-  return { messages, isTyping, addUserMessage, handleOptionSelect };
+  return { messages, isTyping, handleOptionSelect };
 };
+
+    
