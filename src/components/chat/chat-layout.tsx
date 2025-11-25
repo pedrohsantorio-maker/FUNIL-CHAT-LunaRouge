@@ -6,7 +6,7 @@ import { ChatInput } from "./chat-input";
 import { MessageList } from "./message-list";
 
 export function ChatLayout() {
-  const { messages, isTyping, addUserMessage, handleOptionSelect } = useChatFlow();
+  const { messages, isTyping, handleOptionSelect } = useChatFlow();
 
   return (
     <div className="flex flex-col h-full bg-secondary/40">
@@ -16,7 +16,7 @@ export function ChatLayout() {
         isTyping={isTyping}
         onOptionSelect={(value, text) => handleOptionSelect(value, text)}
       />
-      <ChatInput onSendMessage={addUserMessage} isTyping={isTyping} />
+      <ChatInput isTyping={isTyping} />
     </div>
   );
 }
