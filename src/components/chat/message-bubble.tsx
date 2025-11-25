@@ -14,7 +14,6 @@ import { ExternalLink } from "lucide-react";
 
 interface MessageBubbleProps {
   message: Message;
-  onOptionSelect?: (value: string, text: string) => void;
 }
 
 const botImage = placeholderData.placeholderImages.find(
@@ -23,13 +22,13 @@ const botImage = placeholderData.placeholderImages.find(
 
 export const MessageBubble: FC<MessageBubbleProps> = ({
   message,
-  onOptionSelect,
 }) => {
   const isBot = message.sender === "bot";
 
   const renderContent = () => {
     switch (message.type) {
       case "text":
+      case "options":
         return <p className="whitespace-pre-wrap">{message.content}</p>;
       case "image":
         return (
@@ -73,24 +72,6 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
               </CardContent>
             </Card>
           </a>
-        );
-      case "options":
-        return (
-          <div>
-            <p className="mb-2 whitespace-pre-wrap">{message.content}</p>
-            <div className="flex flex-col gap-2">
-              {message.options?.map((option) => (
-                <Button
-                  key={option.value}
-                  onClick={() => onOptionSelect?.(option.value, option.text)}
-                  variant="outline"
-                  className="justify-start bg-secondary hover:bg-secondary/70 h-auto py-2 whitespace-normal text-left"
-                >
-                  {option.text}
-                </Button>
-              ))}
-            </div>
-          </div>
         );
       default:
         return null;
