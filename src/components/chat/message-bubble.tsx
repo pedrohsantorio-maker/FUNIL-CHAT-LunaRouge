@@ -11,6 +11,7 @@ import type { Message, MessageOption } from "@/lib/types";
 import { AudioPlayer } from "./audio-player";
 import placeholderData from "@/lib/placeholder-images.json";
 import { ExternalLink } from "lucide-react";
+import { VideoPlayer } from "./video-player";
 
 interface MessageBubbleProps {
   message: Message;
@@ -44,13 +45,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
       case "audio":
         return <AudioPlayer src={message.content} />;
       case "video":
-        return (
-          <video
-            src={message.content}
-            controls
-            className="w-full max-w-xs rounded-lg"
-          />
-        );
+        return <VideoPlayer src={message.content} />;
       case "link":
         return (
           <a
@@ -96,7 +91,8 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
           "max-w-[75%] rounded-2xl px-4 py-2",
           isBot
             ? "bg-secondary text-foreground rounded-bl-none"
-            : "bg-primary text-primary-foreground rounded-br-none"
+            : "bg-primary text-primary-foreground rounded-br-none",
+           (message.type === 'video' || message.type === 'image') && 'p-0 bg-transparent'
         )}
       >
         {renderContent()}
