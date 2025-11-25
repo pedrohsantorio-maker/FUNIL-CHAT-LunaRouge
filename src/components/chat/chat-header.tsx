@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from 'next/link';
 import placeholderData from "@/lib/placeholder-images.json";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import Image from "next/image";
 
 export function ChatHeader() {
   const sterAvatar = placeholderData.placeholderImages.find(
@@ -15,10 +17,25 @@ export function ChatHeader() {
            <ArrowLeft/>
          </Button>
       </Link>
-      <Avatar className="h-10 w-10 border-2 border-primary">
-        {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Luna Rouge" />}
-        <AvatarFallback>L</AvatarFallback>
-      </Avatar>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Avatar className="h-10 w-10 border-2 border-primary cursor-pointer">
+            {sterAvatar && <AvatarImage src={sterAvatar.imageUrl} alt="Luna Rouge" />}
+            <AvatarFallback>L</AvatarFallback>
+          </Avatar>
+        </DialogTrigger>
+        <DialogContent className="p-0 border-0 max-w-fit bg-transparent">
+          {sterAvatar && (
+            <Image
+              src={sterAvatar.imageUrl}
+              alt="Luna Rouge"
+              width={800}
+              height={800}
+              className="rounded-lg object-contain"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
       <div className="ml-3 flex-1">
         <p className="text-sm font-bold text-primary">
           Luna Rouge
