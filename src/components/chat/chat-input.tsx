@@ -24,11 +24,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onSendMessage, isTyping }) => {
 
   return (
     <div className="p-4 bg-background border-t">
-      <div
-        className="relative flex items-center justify-center gap-2 p-2 rounded-full bg-secondary text-muted-foreground"
-      >
-        <p className="text-sm">Apenas opções podem ser selecionadas.</p>
-      </div>
+      {/* The input bar has been removed as requested */}
     </div>
   );
 };
