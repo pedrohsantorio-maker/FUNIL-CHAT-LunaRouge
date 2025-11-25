@@ -43,14 +43,14 @@ export const MessageList: FC<MessageListProps> = ({
                 message={message}
               />
               {hasOptions && (
-                <div className="flex flex-col items-end gap-2 mt-2 animate-message-in [animation-delay:400ms]">
+                <div className="flex flex-col items-end gap-2 mt-2 animate-message-in" style={{ animationDelay: '1000ms'}}>
                   {message.options?.map((option, index) => (
                     <Button
                       key={option.value}
                       onClick={() => onOptionSelect?.(option.value, option.text)}
                       variant="outline"
-                      className="justify-start bg-background hover:bg-accent h-auto py-2 whitespace-normal text-left max-w-[75%] rounded-2xl rounded-br-none border-primary/50 text-primary hover:text-accent-foreground"
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className="justify-start bg-background hover:bg-accent h-auto py-2 whitespace-normal text-left max-w-[75%] rounded-2xl rounded-br-none border-primary/50 text-primary hover:text-accent-foreground animate-message-in"
+                      style={{ animationDelay: `${1000 + index * 200}ms` }}
                     >
                       {option.text}
                     </Button>
