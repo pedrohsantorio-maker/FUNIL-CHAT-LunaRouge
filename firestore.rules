@@ -1,0 +1,122 @@
+/**
+ * Core Philosophy: This ruleset implements a "Public Read, Authenticated Write" model.
+ * It is designed for a public-facing monitoring dashboard where all data related to
+ * users (leads) and their chat messages must be readable by anyone, without authentication.
+ * However, all write operations (creating, updating, deleting data) are restricted to
+ * authenticated clients, which in this context represents the trusted chatbot service.
+ * This prevents the public dashboard or any unauthorized party from modifying the data.
+ *
+ * Data Structure: The data is organized hierarchically under a top-level `users`
+ * collection. Each user document is identified by a unique `userId`. All chat messages
+ * for a specific user are stored in a `chat_messages` subcollection under that
+ * user's document.
+ *   - /users/{userId}
+ *   - /users/{userId}/chat_messages/{messageId}
+ *
+ * Key Security Decisions:
+ * - Public Reads: All documents in the `users` collection and its `chat_messages`
+ *   subcollection are publicly readable (`get`, `list`) to power the real-time dashboard.
+ * - Authenticated Writes: All write operations (`create`, `update`, `delete`) require
+ *   a valid authenticated user (`request.auth != null`). This secures the data against
+ *   public manipulation while allowing the chatbot service (which operates as an
+ *   authenticated client) to record user interactions.
+ * - Relational Integrity: On document creation, rules enforce that the internal ID
+ *   fields (e.g., `User.id`, `ChatMessage.userId`) match the corresponding IDs in
+ *   the document path. These fields are then enforced as immutable on update to
+ *   prevent data from being re-associated or orphaned.
+ *
+ * Denormalization for Authorization: This ruleset relies on denormalized fields within
+ * documents to maintain relational integrity without needing costly `get()` calls. For
+ * example, each `ChatMessage` document contains a `userId` field, which is validated
+ * against the `userId` in its path (`/users/{userId}/...`). This is fast, efficient,
+ * and secure.
+ *
+ * Structural Segregation: The problem domain does not require a separation of public
+ * and private data, as all data is intended for public consumption on the dashboard.
+ * The user-centric structure `/users/{userId}/...` is sufficient.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper Functions
+    // ------------------------------------
+
+    /**
+     * Checks if the current request is from an authenticated user.
+     * This is the primary gatekeeper for all write operations.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Validates a new User document on creation.
+     * Ensures the document's internal `id` field matches the `userId` from the path.
+     * This maintains crucial relational integrity.
+     */
+    function newUserDataIsValid(userId) {
+      return request.resource.data.id == userId;
+    }
+
+    /**
+     * Validates a User document on update.
+     * Ensures the document's internal `id` field is immutable.
+     */
+    function updatedUserDataIsValid() {
+      return request.resource.data.id == resource.data.id;
+    }
+
+    /**
+     * Validates a new ChatMessage document on creation.
+     * Ensures the message's internal `userId` field matches the `userId` from the path.
+     */
+    function newChatMessageDataIsValid(userId) {
+      return request.resource.data.userId == userId;
+    }
+
+    /**
+     * Validates a ChatMessage document on update.
+     * Ensures the message's internal `userId` field is immutable.
+     */
+    function updatedChatMessageDataIsValid() {
+      return request.resource.data.userId == resource.data.userId;
+    }
+
+
+    // Collection Rules
+    // ------------------------------------
+
+    /**
+     * @description Allows public read access to user profiles for the monitoring dashboard,
+     * but restricts all write operations to authenticated clients (the chatbot service).
+     * @path /users/{userId}
+     * @allow An unauthenticated web visitor `(get)`s a user profile at `/users/user_123`.
+     * @deny An unauthenticated web visitor attempts to `(create)` a new user profile.
+     * @principle Implements a "Public Read, Authenticated Write" model and validates relational integrity by ensuring the document ID matches its internal `id` field.
+     */
+    match /users/{userId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isSignedIn() && newUserDataIsValid(userId);
+      allow update: if isSignedIn() && resource != null && updatedUserDataIsValid();
+      allow delete: if isSignedIn() && resource != null;
+    }
+
+    /**
+     * @description Allows public read access to chat message history, but restricts
+     * all write operations to authenticated clients (the chatbot service).
+     * @path /users/{userId}/chat_messages/{messageId}
+     * @allow An unauthenticated dashboard user `(list)`s all messages for `/users/user_123/chat_messages`.
+     * @deny An unauthenticated user attempts to `(delete)` a chat message.
+     * @principle Inherits the "Public Read, Authenticated Write" model and validates that each message is correctly linked to its parent user via the `userId` field.
+     */
+    match /users/{userId}/chat_messages/{messageId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isSignedIn() && newChatMessageDataIsValid(userId);
+      allow update: if isSignedIn() && resource != null && updatedChatMessageDataIsValid();
+      allow delete: if isSignedIn() && resource != null;
+    }
+  }
+}
