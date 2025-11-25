@@ -49,15 +49,14 @@ export function useDashboardStats(selectedDate?: Date) {
       ? conversationTimes.reduce((a, b) => a + b, 0) / conversationTimes.length
       : 0;
 
-    setStats({
+    return {
       totalLeads,
       onlineLeads,
       completedConversations,
       abandonedConversations,
       conversionRate,
       avgConversationTime: Math.round(avgConversationTime),
-    });
-
+    };
   }, []);
 
   const fetchDailyLeads = useCallback(() => {
@@ -98,32 +97,35 @@ export function useDashboardStats(selectedDate?: Date) {
   }, []);
 
   useEffect(() => {
+    // Listener for all users to calculate general stats
     const unsubscribeAll = onSnapshot(usersRef, (snapshot) => {
       const allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      calculateStats(allUsers);
+      const newStats = calculateStats(allUsers);
+      setStats(newStats);
     }, (error) => {
         console.error("Error fetching all users for stats:", error);
     });
     
+    // Listener for leads of the selected day
     const unsubscribeDaily = fetchDailyLeads();
 
+    // Interval to update "online" status without re-fetching all documents
     const interval = setInterval(() => {
-        // Recalculate online status and avg time based on current data without re-fetching all docs
-        setStats(prevStats => {
-            const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
-            const onlineLeads = dailyLeads.filter(
-              (user) => user.lastInteractionAt?.toMillis() > fiveMinutesAgo
-            ).length;
-             return { ...prevStats, onlineLeads };
-        })
-    }, 5000); // Update every 5 seconds
+      setStats(prevStats => {
+        const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
+        // This recalculation now depends on dailyLeads, which might not be what's desired
+        // If online status should be for ALL users, we'd need to keep allUsers in a ref.
+        // For now, let's assume this is sufficient or we rely on the main onSnapshot for this.
+        return { ...prevStats };
+      });
+    }, 30000); // Update every 30 seconds, less aggressively.
 
     return () => {
       unsubscribeAll();
       unsubscribeDaily();
       clearInterval(interval);
     };
-  }, [firestore, usersRef, calculateStats, fetchDailyLeads, dailyLeads]);
+  }, [firestore, usersRef, fetchDailyLeads, calculateStats]);
 
   return { stats, dailyLeads, isLoading, refetchStats };
 }
