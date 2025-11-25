@@ -39,6 +39,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({ src }) => {
   };
 
   const handleVideoEnd = () => {
+    // With loop enabled, this will only be called if loop is false
     setIsPlaying(false);
   };
 
@@ -55,6 +56,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = ({ src }) => {
         className="w-full h-full object-cover"
         onEnded={handleVideoEnd}
         playsInline
+        loop
       />
       {!isPlaying && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 transition-opacity">
