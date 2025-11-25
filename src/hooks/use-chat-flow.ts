@@ -186,7 +186,7 @@ export const useChatFlow = () => {
         await addBotMessage({
           id: `bot-image-${Date.now()}`,
           type: "image",
-          content: "https://imgur.com/76kuQ9T",
+          content: "https://i.imgur.com/76kuQ9T.jpeg",
         });
         await addBotMessage({
           id: `bot-${Date.now()}`,
