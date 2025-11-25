@@ -5,6 +5,7 @@ import {
   useFirestore,
   useDoc,
   useCollection,
+  useMemoFirebase,
 } from "@/firebase";
 import { doc, collection, orderBy, query } from "firebase/firestore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -36,13 +37,21 @@ export default function ConversationPage() {
   const { userId } = useParams<{ userId: string }>();
   const firestore = useFirestore();
 
-  const userRef = doc(firestore, "users", userId);
+  const userRef = useMemoFirebase(
+    () => (firestore && userId ? doc(firestore, "users", userId) : null),
+    [firestore, userId]
+  );
   const { data: userData, isLoading: isUserLoading } = useDoc(userRef);
 
-  const messagesRef = collection(firestore, "users", userId, "chat_messages");
-  const messagesQuery = query(messagesRef, orderBy("timestamp", "asc"));
-  const { data: messages, isLoading: areMessagesLoading } =
-    useCollection(messagesQuery);
+  const messagesRef = useMemoFirebase(
+    () => (firestore && userId ? collection(firestore, "users", userId, "chat_messages") : null),
+    [firestore, userId]
+  );
+  const messagesQuery = useMemoFirebase(
+      () => (messagesRef ? query(messagesRef, orderBy("timestamp", "asc")) : null),
+      [messagesRef]
+  );
+  const { data: messages, isLoading: areMessagesLoading } = useCollection(messagesQuery);
 
   const [isAnalysisLoading, setIsAnalysisLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<{

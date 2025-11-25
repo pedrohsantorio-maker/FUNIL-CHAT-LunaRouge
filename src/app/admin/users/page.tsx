@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useFirestore, useCollection } from "@/firebase";
+import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { collection } from "firebase/firestore";
 import Link from "next/link";
 import { format, formatDistanceToNow } from "date-fns";
@@ -23,7 +23,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function UsersPage() {
   const firestore = useFirestore();
-  const { data: users, isLoading } = useCollection(collection(firestore, "users"));
+  const usersCollection = useMemoFirebase(
+    () => (firestore ? collection(firestore, "users") : null),
+    [firestore]
+  );
+  const { data: users, isLoading } = useCollection(usersCollection);
+
 
   return (
     <Card>

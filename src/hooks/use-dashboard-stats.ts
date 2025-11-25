@@ -8,7 +8,7 @@ import {
   Timestamp,
   onSnapshot,
 } from "firebase/firestore";
-import { useFirestore } from "@/firebase";
+import { useFirestore, useMemoFirebase } from "@/firebase";
 
 export function useDashboardStats(selectedDate?: Date) {
   const firestore = useFirestore();
@@ -23,9 +23,12 @@ export function useDashboardStats(selectedDate?: Date) {
   const [dailyLeads, setDailyLeads] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const usersRef = useMemo(() => collection(firestore, "users"), [firestore]);
-
-  const calculateStats = useCallback((users: any[]) => {
+  const usersRef = useMemoFirebase(
+    () => (firestore ? collection(firestore, "users") : null),
+    [firestore]
+  );
+  
+  const calculateStats = (users: any[]) => {
     const totalLeads = users.length;
 
     const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
@@ -57,10 +60,10 @@ export function useDashboardStats(selectedDate?: Date) {
       conversionRate,
       avgConversationTime: Math.round(avgConversationTime),
     };
-  }, []);
+  };
 
   const fetchDailyLeads = useCallback(() => {
-    if (!selectedDate) return () => {};
+    if (!selectedDate || !usersRef) return () => {};
 
     setIsLoading(true);
     const startOfDay = new Date(selectedDate);
@@ -97,6 +100,7 @@ export function useDashboardStats(selectedDate?: Date) {
   }, []);
 
   useEffect(() => {
+    if (!usersRef) return;
     // Listener for all users to calculate general stats
     const unsubscribeAll = onSnapshot(usersRef, (snapshot) => {
       const allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -109,23 +113,11 @@ export function useDashboardStats(selectedDate?: Date) {
     // Listener for leads of the selected day
     const unsubscribeDaily = fetchDailyLeads();
 
-    // Interval to update "online" status without re-fetching all documents
-    const interval = setInterval(() => {
-      setStats(prevStats => {
-        const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
-        // This recalculation now depends on dailyLeads, which might not be what's desired
-        // If online status should be for ALL users, we'd need to keep allUsers in a ref.
-        // For now, let's assume this is sufficient or we rely on the main onSnapshot for this.
-        return { ...prevStats };
-      });
-    }, 30000); // Update every 30 seconds, less aggressively.
-
     return () => {
       unsubscribeAll();
       unsubscribeDaily();
-      clearInterval(interval);
     };
-  }, [firestore, usersRef, fetchDailyLeads, calculateStats]);
+  }, [usersRef, fetchDailyLeads]);
 
   return { stats, dailyLeads, isLoading, refetchStats };
 }
