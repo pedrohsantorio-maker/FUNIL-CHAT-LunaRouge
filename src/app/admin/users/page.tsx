@@ -36,7 +36,10 @@ export default function UsersPage() {
     [firestore]
   );
   const usersQuery = useMemoFirebase(
-    () => (usersCollection ? query(usersCollection, orderBy("createdAt", "desc")) : null),
+    () =>
+      usersCollection
+        ? query(usersCollection, orderBy("createdAt", "desc"))
+        : null,
     [usersCollection]
   );
   const { data: users, isLoading } = useCollection(usersQuery);
@@ -72,9 +75,7 @@ export default function UsersPage() {
               users?.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">
-                     <Link href={`/admin/conversations/${user.id}`} className="text-primary hover:underline">
-                        {user.name || 'Usuário'}
-                     </Link>
+                    {user.name || "Usuário"}
                   </TableCell>
                   <TableCell>{user.id}</TableCell>
                   <TableCell>{user.email || "N/A"}</TableCell>
@@ -93,24 +94,26 @@ export default function UsersPage() {
                         })
                       : "N/A"}
                   </TableCell>
-                  <TableCell>{user.currentStep ? `${user.currentStep}/15` : "N/A"}</TableCell>
-                   <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Abrir menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link href={`/admin/conversations/${user.id}`}>
-                              Ver Conversa
-                            </Link>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+                  <TableCell>
+                    {user.currentStep ? `${user.currentStep}/15` : "N/A"}
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <span className="sr-only">Abrir menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <Link href={`/admin/conversations/${user.id}`}>
+                            Ver Conversa
+                          </Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
                 </TableRow>
               ))}
             {!isLoading && users?.length === 0 && (

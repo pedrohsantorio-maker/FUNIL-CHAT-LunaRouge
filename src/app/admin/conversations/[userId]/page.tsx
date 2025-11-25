@@ -44,14 +44,18 @@ export default function ConversationPage() {
   const { data: userData, isLoading: isUserLoading } = useDoc(userRef);
 
   const messagesRef = useMemoFirebase(
-    () => (firestore && userId ? collection(firestore, "users", userId, "chat_messages") : null),
+    () =>
+      firestore && userId
+        ? collection(firestore, "users", userId, "chat_messages")
+        : null,
     [firestore, userId]
   );
   const messagesQuery = useMemoFirebase(
-      () => (messagesRef ? query(messagesRef, orderBy("timestamp", "asc")) : null),
-      [messagesRef]
+    () => (messagesRef ? query(messagesRef, orderBy("timestamp", "asc")) : null),
+    [messagesRef]
   );
-  const { data: messages, isLoading: areMessagesLoading } = useCollection(messagesQuery);
+  const { data: messages, isLoading: areMessagesLoading } =
+    useCollection(messagesQuery);
 
   const [isAnalysisLoading, setIsAnalysisLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<{
@@ -84,21 +88,27 @@ export default function ConversationPage() {
   };
 
   const renderMessageContent = (message: any) => {
+    // Check if message.content exists and is a string
+    const content = message.content || "";
+  
     switch (message.type) {
       case "image":
-        return <img src={message.content} alt="Imagem do chat" className="rounded-lg max-w-xs" />;
+        return <img src={content} alt="Imagem do chat" className="rounded-lg max-w-xs" />;
       case "video":
-        return <video src={message.content} controls className="rounded-lg max-w-xs" />;
+        return <video src={content} controls className="rounded-lg max-w-xs" />;
       case "audio":
-        return <audio src={message.content} controls />;
+        return <audio src={content} controls />;
       case "link":
         return (
-          <a href={message.content} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-            {message.linkTitle || message.content}
+          <a href={content} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            {message.linkTitle || content}
           </a>
         );
+      case "text":
+      case "options":
       default:
-        return <p>{message.content}</p>;
+        // Ensure content is a string before rendering
+        return <p>{String(content)}</p>;
     }
   };
 
@@ -112,22 +122,30 @@ export default function ConversationPage() {
               <Skeleton className="h-5 w-48 mt-1" />
             ) : (
               <CardDescription>
-                {userData?.email || `ID: ${userId}`}
+                {userData?.name || userData?.email || `ID: ${userId}`}
               </CardDescription>
             )}
           </div>
-          <Button onClick={handleAnalyze} disabled={areMessagesLoading || isAnalysisLoading}>
+          <Button
+            onClick={handleAnalyze}
+            disabled={areMessagesLoading || isAnalysisLoading}
+          >
             Analisar Conversa com IA
           </Button>
         </CardHeader>
       </Card>
-      <div className="flex-1 bg-muted/30 rounded-lg p-4 overflow-y-auto">
+      <ScrollArea className="flex-1 bg-muted/30 rounded-lg p-4">
         <div className="flex flex-col gap-4">
-          {areMessagesLoading && (
+          {areMessagesLoading &&
             Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className={cn("h-16 w-3/4 rounded-lg", i % 2 === 0 ? "self-start" : "self-end")} />
-            ))
-          )}
+              <Skeleton
+                key={i}
+                className={cn(
+                  "h-16 w-3/4 rounded-lg",
+                  i % 2 === 0 ? "self-start" : "self-end"
+                )}
+              />
+            ))}
           {messages?.map((message) => (
             <div
               key={message.id}
@@ -154,11 +172,11 @@ export default function ConversationPage() {
                 {renderMessageContent(message)}
               </div>
               {message.sender === "user" && (
-                 <Avatar className="h-8 w-8">
-                   <AvatarFallback>
-                     <User />
-                   </AvatarFallback>
-                 </Avatar>
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback>
+                    <User />
+                  </AvatarFallback>
+                </Avatar>
               )}
             </div>
           ))}
@@ -168,7 +186,7 @@ export default function ConversationPage() {
             </p>
           )}
         </div>
-      </div>
+      </ScrollArea>
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
@@ -178,32 +196,42 @@ export default function ConversationPage() {
             </DialogDescription>
           </DialogHeader>
           {isAnalysisLoading ? (
-             <div className="space-y-4">
-                <Skeleton className="h-6 w-1/4" />
-                <Skeleton className="h-20 w-full" />
-                <Skeleton className="h-6 w-1/4" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-6 w-1/4" />
-                 <Skeleton className="h-24 w-full" />
-             </div>
+            <div className="space-y-4">
+              <Skeleton className="h-6 w-1/4" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-6 w-1/4" />
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-6 w-1/4" />
+              <Skeleton className="h-24 w-full" />
+            </div>
           ) : (
             <ScrollArea className="max-h-[60vh] pr-6">
-                <div className="space-y-6">
+              <div className="space-y-6">
                 <section>
-                    <h3 className="text-lg font-semibold mb-2">Resumo da Conversa</h3>
-                    <p className="text-muted-foreground">{analysisResult?.summary}</p>
-                </section>
-                 <section>
-                    <h3 className="text-lg font-semibold mb-2">Sentimento do Usuário</h3>
-                    <Badge>{analysisResult?.sentiment}</Badge>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Resumo da Conversa
+                  </h3>
+                  <p className="text-muted-foreground">
+                    {analysisResult?.summary}
+                  </p>
                 </section>
                 <section>
-                    <h3 className="text-lg font-semibold mb-2">Sugestões de Otimização</h3>
-                    <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
-                        {analysisResult?.suggestions.map((sug, i) => <li key={i}>{sug}</li>)}
-                    </ul>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Sentimento do Usuário
+                  </h3>
+                  <Badge>{analysisResult?.sentiment}</Badge>
                 </section>
-                </div>
+                <section>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Sugestões de Otimização
+                  </h3>
+                  <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+                    {analysisResult?.suggestions.map((sug, i) => (
+                      <li key={i}>{sug}</li>
+                    ))}
+                  </ul>
+                </section>
+              </div>
             </ScrollArea>
           )}
           <DialogFooter>

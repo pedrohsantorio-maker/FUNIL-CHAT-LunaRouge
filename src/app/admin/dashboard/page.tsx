@@ -246,20 +246,15 @@ export default function DashboardPage() {
                   </TableRow>
                 ))}
               {!isLoading &&
-                dailyLeads.map((lead) => (
+                dailyLeads.map((lead, index) => (
                   <TableRow key={lead.id}>
                     <TableCell className="font-medium">
-                      <Link
-                        href={`/admin/conversations/${lead.id}`}
-                        className="text-primary hover:underline"
-                      >
-                        {lead.name || "Usuário"}
-                      </Link>
+                      Lead {String(index + 1).padStart(2, "0")}
                     </TableCell>
                     <TableCell>{lead.id.substring(0, 8)}...</TableCell>
                     <TableCell>{lead.email || "N/A"}</TableCell>
                     <TableCell>
-                      {format(lead.createdAt.toDate(), "HH:mm:ss", {
+                      {format(lead.createdAt.toDate(), "dd/MM/yyyy 'às' HH:mm", {
                         locale: ptBR,
                       })}
                     </TableCell>
