@@ -231,7 +231,7 @@ export const useChatFlow = () => {
          await addBotMessage({
             id: `bot-audio-11-${Date.now()}`,
             type: "audio",
-            content: "https://firebasestorage.googleapis.com/v0/b/chatbot-challenge-d5a23.appspot.com/o/audio.mp3?alt=media&token=38528f57-1a01-4475-ae90-256561115b3c", // Placeholder
+            content: "https://thriving-mermaid-fe7406.netlify.app/AUDIO-2025-11-11-16-42-18.mp3",
         });
         await addBotMessage({
             id: `bot-options-12-${Date.now()}`,
@@ -301,3 +301,5 @@ export const useChatFlow = () => {
 
   return { messages, isTyping, addUserMessage, handleOptionSelect };
 };
+
+    
