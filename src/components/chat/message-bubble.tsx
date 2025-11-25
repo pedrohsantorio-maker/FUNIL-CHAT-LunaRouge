@@ -34,7 +34,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
       case "image":
         return (
           <Image
-            src={botImage?.imageUrl || ""}
+            src={message.content || botImage?.imageUrl || ""}
             alt={botImage?.description || "Image from bot"}
             data-ai-hint={botImage?.imageHint || ""}
             width={400}
@@ -44,6 +44,14 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
         );
       case "audio":
         return <AudioPlayer src={message.content} />;
+      case "video":
+        return (
+          <video
+            src={message.content}
+            controls
+            className="w-full max-w-xs rounded-lg"
+          />
+        );
       case "link":
         return (
           <a
@@ -69,14 +77,14 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
       case "options":
         return (
           <div>
-            <p className="mb-2">{message.content}</p>
+            <p className="mb-2 whitespace-pre-wrap">{message.content}</p>
             <div className="flex flex-col gap-2">
               {message.options?.map((option) => (
                 <Button
                   key={option.value}
                   onClick={() => onOptionSelect?.(option.value, option.text)}
                   variant="outline"
-                  className="justify-start bg-secondary hover:bg-secondary/70"
+                  className="justify-start bg-secondary hover:bg-secondary/70 h-auto py-2 whitespace-normal text-left"
                 >
                   {option.text}
                 </Button>
