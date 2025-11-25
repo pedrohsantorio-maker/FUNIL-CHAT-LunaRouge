@@ -56,10 +56,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
           >
             <Card className="bg-secondary hover:bg-secondary/80">
               <CardContent className="p-4">
-                <p className="font-bold text-primary">Acesso Exclusivo</p>
-                <p className="text-sm text-muted-foreground truncate max-w-xs">
-                  {message.content}
-                </p>
+                <p className="font-bold text-primary">{message.linkTitle || "Acesso Exclusivo"}</p>
                 <div className="flex items-center gap-2 mt-2 text-primary font-semibold">
                   <span>Ir para o site</span>
                   <ExternalLink className="h-4 w-4" />
@@ -92,7 +89,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
           isBot
             ? "bg-secondary text-foreground rounded-bl-none"
             : "bg-primary text-primary-foreground rounded-br-none",
-           (message.type === 'video' || message.type === 'image') && 'p-0 bg-transparent'
+           (message.type === 'video' || message.type === 'image' || message.type === 'link') && 'p-0 bg-transparent'
         )}
       >
         {renderContent()}

@@ -116,11 +116,11 @@ export const useChatFlow = () => {
           type: "options",
           content: "Meu amor, que sorte a sua em, me chamou justamente quando estou em um momento bem quente aqui... 😈 Você aceita um presentinho?",
           options: [
-              { text: "Sim, aceito o presentinho!", value: "sim" },
-              { text: "Não, obrigado.", value: "não" },
+              { text: "Sim, aceito o presentinho!", value: "yes_gift" },
+              { text: "Não, obrigado.", value: "no_gift" },
           ]
         });
-        setStep(4); // Now expects typed response
+        setStep(4);
         break;
 
       case 4:
@@ -186,7 +186,7 @@ export const useChatFlow = () => {
         await addBotMessage({
           id: `bot-image-${Date.now()}`,
           type: "image",
-          content: botImage || "",
+          content: "https://imgur.com/76kuQ9T",
         });
         await addBotMessage({
           id: `bot-${Date.now()}`,
@@ -253,7 +253,8 @@ export const useChatFlow = () => {
         await addBotMessage({
             id: `bot-link-${Date.now()}`,
             type: "link",
-            content: "https://checkout.example.com/offer", // your actual link
+            content: "https://lunavipp.netlify.app/",
+            linkTitle: "Luna Exclusivos",
         });
         await addBotMessage({
           id: `bot-text-13-${Date.now()}`,
@@ -305,5 +306,3 @@ export const useChatFlow = () => {
 
   return { messages, isTyping, addUserMessage, handleOptionSelect };
 };
-
-    

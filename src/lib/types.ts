@@ -12,4 +12,5 @@ export type Message = {
   timestamp: Date;
   avatar?: string;
   name?: string;
+  linkTitle?: string;
 };
