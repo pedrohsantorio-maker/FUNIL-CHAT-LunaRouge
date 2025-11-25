@@ -12,7 +12,7 @@ import { AudioPlayer } from "./audio-player";
 import placeholderData from "@/lib/placeholder-images.json";
 import { ExternalLink } from "lucide-react";
 import { VideoPlayer } from "./video-player";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface MessageBubbleProps {
   message: Message;
@@ -46,6 +46,10 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
               />
             </DialogTrigger>
             <DialogContent className="p-0 border-0 max-w-fit bg-transparent">
+              <DialogTitle className="sr-only">Imagem enviada por Luna Rouge</DialogTitle>
+              <DialogDescription className="sr-only">
+                Uma imagem ampliada enviada no chat por Luna Rouge.
+              </DialogDescription>
               <Image
                 src={message.content || botImage?.imageUrl || ""}
                 alt={botImage?.description || "Image from bot"}

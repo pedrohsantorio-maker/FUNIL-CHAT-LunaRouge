@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from 'next/link';
 import placeholderData from "@/lib/placeholder-images.json";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import Image from "next/image";
 
 export function ChatHeader() {
@@ -25,6 +25,10 @@ export function ChatHeader() {
           </Avatar>
         </DialogTrigger>
         <DialogContent className="p-0 border-0 max-w-fit bg-transparent">
+          <DialogTitle className="sr-only">Imagem de perfil de Luna Rouge</DialogTitle>
+          <DialogDescription className="sr-only">
+            Uma imagem ampliada do avatar de Luna Rouge.
+          </DialogDescription>
           {sterAvatar && (
             <Image
               src={sterAvatar.imageUrl}
