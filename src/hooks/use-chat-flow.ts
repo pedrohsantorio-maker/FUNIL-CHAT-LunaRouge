@@ -125,7 +125,7 @@ export const useChatFlow = () => {
           await addBotMessage({
             id: `bot-video-${Date.now()}`,
             type: "video",
-            content: "https://i.imgur.com/8Q9Z5C1.mp4",
+            content: "https://i.imgur.com/K4IJyip.mp4",
           });
           await addBotMessage({
             id: `bot-${Date.now()}`,
