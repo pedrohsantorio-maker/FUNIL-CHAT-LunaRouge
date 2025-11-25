@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   Users,
   MessageSquare,
-  LayoutDashboard,
+  BarChartBig,
   PanelLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { FirebaseClientProvider } from "@/firebase/client-provider";
 
 const navItems = [
-  { href: "/admin/dashboard", icon: LayoutDashboard, label: "Visão Geral" },
+  { href: "/admin/dashboard", icon: BarChartBig, label: "Visão Geral" },
   { href: "/admin/users", icon: Users, label: "Leads" },
   { href: "/admin/conversations", icon: MessageSquare, label: "Conversas" },
 ];

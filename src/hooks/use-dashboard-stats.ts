@@ -7,8 +7,11 @@ import {
   where,
   Timestamp,
   onSnapshot,
+  getDocs,
 } from "firebase/firestore";
 import { useFirestore, useMemoFirebase } from "@/firebase";
+import { formatDuration, intervalToDuration } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export function useDashboardStats(selectedDate?: Date) {
   const firestore = useFirestore();
@@ -18,7 +21,7 @@ export function useDashboardStats(selectedDate?: Date) {
     completedConversations: 0,
     abandonedConversations: 0,
     conversionRate: 0,
-    avgConversationTime: 0,
+    avgConversationTime: "0m 0s",
   });
   const [dailyLeads, setDailyLeads] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,40 +30,56 @@ export function useDashboardStats(selectedDate?: Date) {
     () => (firestore ? collection(firestore, "users") : null),
     [firestore]
   );
-  
-  const calculateStats = (users: any[]) => {
-    const totalLeads = users.length;
+
+  const calculateStats = useCallback((allUsers: any[]) => {
+    const totalLeads = allUsers.length;
 
     const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
-    const onlineLeads = users.filter(
+    const onlineLeads = allUsers.filter(
       (user) => user.lastInteractionAt?.toMillis() > fiveMinutesAgo
     ).length;
 
-    const completedConversations = users.filter(
+    const completedConversations = allUsers.filter(
       (user) => user.currentStep === 15 // Assuming step 15 is completion
     ).length;
-    
-    const abandonedConversations = totalLeads - completedConversations;
-    
-    const conversionRate = totalLeads > 0 ? (completedConversations / totalLeads) * 100 : 0;
-    
-    const conversationTimes = users
-        .filter(user => user.createdAt && user.lastInteractionAt)
-        .map(user => (user.lastInteractionAt.toMillis() - user.createdAt.toMillis()) / (1000 * 60)); // in minutes
-    
-    const avgConversationTime = conversationTimes.length > 0
-      ? conversationTimes.reduce((a, b) => a + b, 0) / conversationTimes.length
-      : 0;
 
-    return {
+    const abandonedConversations = totalLeads - completedConversations;
+
+    const conversionRate =
+      totalLeads > 0 ? (completedConversations / totalLeads) * 100 : 0;
+
+    const conversationTimes = allUsers
+      .filter((user) => user.createdAt && user.lastInteractionAt)
+      .map(
+        (user) =>
+          user.lastInteractionAt.toMillis() - user.createdAt.toMillis()
+      ); // in milliseconds
+
+    const totalConversationTime =
+      conversationTimes.length > 0
+        ? conversationTimes.reduce((a, b) => a + b, 0)
+        : 0;
+    const avgConversationTimeMillis =
+      conversationTimes.length > 0
+        ? totalConversationTime / conversationTimes.length
+        : 0;
+    
+    const duration = intervalToDuration({ start: 0, end: avgConversationTimeMillis });
+    const formattedAvgTime = formatDuration(duration, {
+        format: ['minutes', 'seconds'],
+        locale: ptBR
+    }).replace(' minutos', 'm').replace(' segundos', 's');
+
+
+    setStats({
       totalLeads,
       onlineLeads,
       completedConversations,
       abandonedConversations,
       conversionRate,
-      avgConversationTime: Math.round(avgConversationTime),
-    };
-  };
+      avgConversationTime: formattedAvgTime,
+    });
+  }, []); // Empty dependency array as setStats is stable
 
   const fetchDailyLeads = useCallback(() => {
     if (!selectedDate || !usersRef) return () => {};
@@ -81,35 +100,50 @@ export function useDashboardStats(selectedDate?: Date) {
       where("createdAt", "<=", endTimestamp)
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const leads = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setDailyLeads(leads);
-      setIsLoading(false);
-    }, (error) => {
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const leads = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setDailyLeads(leads);
+        setIsLoading(false);
+      },
+      (error) => {
         console.error("Error fetching daily leads:", error);
         setIsLoading(false);
-    });
+      }
+    );
 
     return unsubscribe;
   }, [selectedDate, usersRef]);
 
-
-  const refetchStats = useCallback(() => {
-     // The onSnapshot listener will automatically refetch. 
-     // This function can be used to manually trigger updates if needed in the future.
-  }, []);
-
   useEffect(() => {
-    if (!usersRef) return;
+    if (!usersRef) {
+        setIsLoading(false);
+        return;
+    }
+    setIsLoading(true);
     // Listener for all users to calculate general stats
-    const unsubscribeAll = onSnapshot(usersRef, (snapshot) => {
-      const allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      const newStats = calculateStats(allUsers);
-      setStats(newStats);
-    }, (error) => {
+    const unsubscribeAll = onSnapshot(
+      usersRef,
+      (snapshot) => {
+        const allUsers = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        calculateStats(allUsers);
+        // We set loading to false here after stats are calculated,
+        // but daily leads might still be loading. The daily leads
+        // fetch will manage the final loading state.
+      },
+      (error) => {
         console.error("Error fetching all users for stats:", error);
-    });
-    
+        setIsLoading(false);
+      }
+    );
+
     // Listener for leads of the selected day
     const unsubscribeDaily = fetchDailyLeads();
 
@@ -117,7 +151,7 @@ export function useDashboardStats(selectedDate?: Date) {
       unsubscribeAll();
       unsubscribeDaily();
     };
-  }, [usersRef, fetchDailyLeads]);
+  }, [usersRef, fetchDailyLeads, calculateStats]);
 
-  return { stats, dailyLeads, isLoading, refetchStats };
+  return { stats, dailyLeads, isLoading };
 }
