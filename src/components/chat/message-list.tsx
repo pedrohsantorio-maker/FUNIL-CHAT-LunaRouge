@@ -43,7 +43,7 @@ export const MessageList: FC<MessageListProps> = ({
                 message={message}
               />
               {hasOptions && (
-                <div className="flex flex-col items-end gap-2 mt-2 animate-message-in">
+                <div className="flex flex-col items-end gap-2 mt-2 animate-message-in [animation-delay:400ms]">
                   {message.options?.map((option, index) => (
                     <Button
                       key={option.value}
