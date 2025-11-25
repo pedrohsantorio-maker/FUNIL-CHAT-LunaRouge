@@ -113,14 +113,18 @@ export const useChatFlow = () => {
       case 3:
         await addBotMessage({
           id: `bot-${Date.now()}`,
-          type: "text",
+          type: "options",
           content: "Meu amor, que sorte a sua em, me chamou justamente quando estou em um momento bem quente aqui... 😈 Você aceita um presentinho?",
+          options: [
+              { text: "Sim, aceito o presentinho!", value: "sim" },
+              { text: "Não, obrigado.", value: "não" },
+          ]
         });
         setStep(4); // Now expects typed response
         break;
 
       case 4:
-        const positiveResponse = /sim|claro|com certeza|aceito|quero|manda/.test(userResponse);
+        const positiveResponse = /sim|claro|com certeza|aceito|quero|manda|yes_gift/.test(userResponse);
         if (positiveResponse) {
           await addBotMessage({
             id: `bot-video-${Date.now()}`,
@@ -286,7 +290,7 @@ export const useChatFlow = () => {
       case 99: // Handles "Tem certeza?"
         if (userResponse === 'yes_gift') {
             setStep(4);
-            await handleBotResponse('sim'); // Re-trigger step 4 with a positive response
+            await handleBotResponse('yes_gift'); // Re-trigger step 4 with a positive response
         } else {
             await addBotMessage({
                 id: `bot-wait-${Date.now()}`,
