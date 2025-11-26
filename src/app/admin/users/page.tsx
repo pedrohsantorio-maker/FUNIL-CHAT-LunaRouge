@@ -30,6 +30,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 export default function UsersPage() {
   const firestore = useFirestore();
@@ -80,7 +81,7 @@ export default function UsersPage() {
                     Lead {String(users.length - index).padStart(2, "0")}
                   </TableCell>
                   <TableCell>{user.id}</TableCell>
-                  <TableCell>{user.email || "N/A"}</TableCell>
+                  <TableCell>{user.email || "Anônimo"}</TableCell>
                   <TableCell>
                     {user.createdAt
                       ? format(user.createdAt.toDate(), "dd/MM/yyyy HH:mm", {
@@ -96,12 +97,16 @@ export default function UsersPage() {
                         })
                       : "N/A"}
                   </TableCell>
-                  <TableCell
-                    className={cn(
-                      user.hasConverted && "text-green-500 font-bold"
+                  <TableCell>
+                    {user.hasConverted ? (
+                      <Badge className="bg-green-600 text-white hover:bg-green-700">
+                        Concluída
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
+                        Iniciou
+                      </Badge>
                     )}
-                  >
-                    {user.hasConverted ? "Concluído" : (user.currentStep ? `${user.currentStep}/15` : "N/A")}
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>

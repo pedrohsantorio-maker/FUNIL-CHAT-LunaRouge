@@ -56,6 +56,8 @@ import {
 import { DateRange } from "react-day-picker";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+
 
 export default function DashboardPage() {
   const [date, setDate] = useState<Date>(new Date());
@@ -196,7 +198,13 @@ export default function DashboardPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Lead do Dia</TableHead>
+                <TableHead>
+                  <div className="flex flex-col">
+                    <span>Lead</span>
+                    <span>do Dia</span>
+                  </div>
+                </TableHead>
+                <TableHead>ID do Usuário</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Início</TableHead>
                 <TableHead>Última Interação</TableHead>
@@ -208,7 +216,7 @@ export default function DashboardPage() {
               {isLoading &&
                 Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={i}>
-                    <TableCell colSpan={6}>
+                    <TableCell colSpan={7}>
                       <Skeleton className="h-8 w-full" />
                     </TableCell>
                   </TableRow>
@@ -219,7 +227,8 @@ export default function DashboardPage() {
                     <TableCell className="font-medium">
                       Lead {String(index + 1).padStart(2, "0")}
                     </TableCell>
-                    <TableCell>{lead.email || "N/A"}</TableCell>
+                    <TableCell>{lead.id}</TableCell>
+                    <TableCell>{lead.email || "Anônimo"}</TableCell>
                     <TableCell>
                       {format(lead.createdAt.toDate(), "dd/MM/yyyy 'às' HH:mm", {
                         locale: ptBR,
@@ -231,12 +240,16 @@ export default function DashboardPage() {
                         locale: ptBR,
                       })}
                     </TableCell>
-                    <TableCell
-                      className={cn(
-                        lead.hasConverted && "text-green-500 font-bold"
+                    <TableCell>
+                      {lead.hasConverted ? (
+                        <Badge className="bg-green-600 text-white hover:bg-green-700">
+                          Concluída
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
+                          Iniciou
+                        </Badge>
                       )}
-                    >
-                      {lead.hasConverted ? "Concluído" : (lead.currentStep ? `${lead.currentStep}/15` : "N/A")}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
@@ -259,7 +272,7 @@ export default function DashboardPage() {
                 ))}
               {!isLoading && dailyLeads.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center">
+                  <TableCell colSpan={7} className="text-center">
                     Nenhum usuário encontrado para esta data.
                   </TableCell>
                 </TableRow>
