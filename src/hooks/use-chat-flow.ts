@@ -70,15 +70,16 @@ export const useChatFlow = () => {
 
   const saveMessage = useCallback(
     (message: Message) => {
-      if (!messagesColRef) return;
+      if (!messagesColRef || !userId) return;
       const { id, ...messageData } = message;
       addDocumentNonBlocking(messagesColRef, {
         ...messageData,
+        userId: userId, // Add userId to the message object
         // Convert Date to Firestore Timestamp for consistency
         timestamp: serverTimestamp(),
       });
     },
-    [messagesColRef]
+    [messagesColRef, userId]
   );
 
   const updateUser = useCallback(
@@ -464,6 +465,7 @@ export const useChatFlow = () => {
         break;
 
       case 15: // End of main flow
+        updateUser({ currentStep: 15 });
       default:
         // Conversation ended or in an unknown state.
         // Redirect to link if they keep talking.
@@ -504,3 +506,5 @@ export const useChatFlow = () => {
 
   return { messages, isTyping, handleOptionSelect };
 };
+
+    
