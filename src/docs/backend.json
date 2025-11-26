@@ -1,0 +1,147 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user (lead) interacting with the chatbot.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user. (Primary Key)"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the user."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user was created.",
+          "format": "date-time"
+        },
+        "lastInteractionAt": {
+          "type": "string",
+          "description": "Timestamp of the user's last interaction.",
+          "format": "date-time"
+        },
+        "utm": {
+          "type": "string",
+          "description": "UTM parameters associated with the user's entry point."
+        },
+        "origin": {
+          "type": "string",
+          "description": "The origin or source from where the user started the chat."
+        },
+        "currentStep": {
+          "type": "string",
+          "description": "The current step or stage the user is at in the chatbot conversation flow."
+        },
+        "hasConverted": {
+          "type": "boolean",
+          "description": "Indicates if the user has clicked the final conversion link."
+        }
+      },
+      "required": [
+        "id",
+        "createdAt",
+        "lastInteractionAt"
+      ]
+    },
+    "ChatMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChatMessage",
+      "type": "object",
+      "description": "Represents a single message within a chat conversation.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the message. (Primary Key)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N ChatMessage)"
+        },
+        "text": {
+          "type": "string",
+          "description": "Content of the message."
+        },
+        "sender": {
+          "type": "string",
+          "description": "Indicates who sent the message (e.g., 'user', 'bot')."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the message was sent.",
+          "format": "date-time"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the message (e.g., 'text', 'audio', 'image', 'video', 'link')."
+        },
+        "storagePath": {
+          "type": "string",
+          "description": "Path to the media file in Firebase Storage, if applicable (for audio, image, video messages)."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "sender",
+        "timestamp",
+        "type"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles. Includes denormalized fields like 'email', 'createdAt', and 'lastInteractionAt' for efficient querying and real-time updates on the dashboard.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "Unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/chat_messages/{messageId}",
+        "definition": {
+          "entityName": "ChatMessage",
+          "schema": {
+            "$ref": "#/backend/entities/ChatMessage"
+          },
+          "description": "Stores individual chat messages associated with each user. Enables real-time updates of chat history on the dashboard.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "Unique identifier for the user."
+            },
+            {
+              "name": "messageId",
+              "description": "Unique identifier for the chat message."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to support a real-time monitoring dashboard for chatbot interactions. It prioritizes public read access for the dashboard while restricting write access to the chatbot, ensuring data integrity and preventing unauthorized modifications. The structure is optimized for real-time updates and efficient querying for dashboard metrics.\n\n**Authorization Independence:** The structure avoids hierarchical authorization dependencies, ensuring atomic operations for transactions and batches. All necessary information for authorization is readily available within each document, eliminating the need for `get()` calls in security rules.\n\n**QAPs Support:** The structure supports the required QAPs by segregating user data and chat messages into separate collections and subcollections, respectively. This segregation allows for secure list operations on user data and chat messages while maintaining public read access for the dashboard.\n\nThe primary collections and subcollections are:\n\n*   `/users/{userId}`: Stores user profiles, including IDs, email, creation dates, and interaction timestamps. The `userId` acts as the unique identifier for each user.\n*   `/users/{userId}/chat_messages/{messageId}`: Stores individual chat messages associated with each user. The `messageId` uniquely identifies each message within a user's chat history."
+  }
+}

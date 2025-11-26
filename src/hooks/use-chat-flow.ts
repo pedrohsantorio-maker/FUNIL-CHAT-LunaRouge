@@ -93,6 +93,10 @@ export const useChatFlow = () => {
     [userDocRef]
   );
 
+  const handleConversion = useCallback(() => {
+    updateUser({ hasConverted: true });
+  }, [updateUser]);
+
   const addBotMessage = useCallback(
     async (message: Omit<Message, "sender" | "timestamp">, delay?: number) => {
       setIsTyping(true);
@@ -163,6 +167,7 @@ export const useChatFlow = () => {
         createdAt: serverTimestamp(),
         lastInteractionAt: serverTimestamp(),
         currentStep: 1,
+        hasConverted: false,
       }, { merge: true });
     }
 
@@ -504,11 +509,12 @@ export const useChatFlow = () => {
     setStep(nextStep);
   };
 
-  return { messages, isTyping, handleOptionSelect };
+  return { messages, isTyping, handleOptionSelect, handleConversion };
 };
 
     
     
 
     
+
 

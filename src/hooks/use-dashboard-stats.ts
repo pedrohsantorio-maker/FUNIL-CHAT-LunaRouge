@@ -51,9 +51,11 @@ export function useDashboardStats(selectedDate?: Date) {
       const onlineLeads = allUsers.filter(
         (user: any) => user.lastInteractionAt?.toMillis() > fiveMinutesAgo
       ).length;
+      
       const completedConversations = allUsers.filter(
-        (user: any) => user.currentStep >= 14
+        (user: any) => user.hasConverted
       ).length;
+      
       const abandonedConversations = totalLeads - completedConversations;
       const conversionRate =
         totalLeads > 0 ? (completedConversations / totalLeads) * 100 : 0;

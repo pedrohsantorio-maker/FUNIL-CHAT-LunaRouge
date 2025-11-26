@@ -13,6 +13,7 @@ import placeholderData from "@/lib/placeholder-images.json";
 import { ExternalLink } from "lucide-react";
 import { VideoPlayer } from "./video-player";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useChatFlow } from "@/hooks/use-chat-flow";
 
 interface MessageBubbleProps {
   message: Message;
@@ -26,6 +27,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
   message,
 }) => {
   const isBot = message.sender === "bot";
+  const { handleConversion } = useChatFlow();
 
   const renderContent = () => {
     switch (message.type) {
@@ -71,6 +73,7 @@ export const MessageBubble: FC<MessageBubbleProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             className="block"
+            onClick={handleConversion}
           >
             <Card className="bg-secondary hover:bg-secondary/80">
               <CardContent className="p-4">

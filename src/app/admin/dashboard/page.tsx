@@ -232,7 +232,7 @@ export default function DashboardPage() {
                     </TableCell>
                     <TableCell
                       className={cn(
-                        lead.currentStep >= 14 && "text-green-500 font-bold"
+                        lead.hasConverted && "text-green-500 font-bold"
                       )}
                     >
                       {lead.currentStep ? `${lead.currentStep}/15` : "N/A"}
