@@ -72,10 +72,10 @@ export default function UsersPage() {
                 </TableRow>
               ))}
             {!isLoading &&
-              users?.map((user) => (
+              users?.map((user, index) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">
-                    {user.name || "Usuário"}
+                    Lead {String(users.length - index).padStart(2, "0")}
                   </TableCell>
                   <TableCell>{user.id}</TableCell>
                   <TableCell>{user.email || "N/A"}</TableCell>
