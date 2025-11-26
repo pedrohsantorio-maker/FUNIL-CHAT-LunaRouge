@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import { AudioPlayer } from "@/components/chat/audio-player";
 
 export default function ConversationPage() {
   const { userId } = useParams<{ userId: string }>();
@@ -95,7 +96,7 @@ export default function ConversationPage() {
       case "video":
         return <video src={content} controls className="rounded-lg max-w-xs" />;
       case "audio":
-        return <audio src={content} controls />;
+        return <AudioPlayer src={content} />;
       case "link":
         return (
           <a href={content} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
