@@ -97,7 +97,7 @@ export default function UsersPage() {
                   </TableCell>
                   <TableCell
                     className={cn(
-                      user.currentStep === 15 && "text-green-500 font-bold"
+                      user.currentStep >= 14 && "text-green-500 font-bold"
                     )}
                   >
                     {user.currentStep ? `${user.currentStep}/15` : "N/A"}
