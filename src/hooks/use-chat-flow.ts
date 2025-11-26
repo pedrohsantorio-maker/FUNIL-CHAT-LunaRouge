@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -422,7 +423,7 @@ export const useChatFlow = () => {
           {
             id: `bot-link-13-${Date.now()}`,
             type: "link",
-            content: "https://lunavipp.netlify.app/",
+            content: "https://lunarouge-vip.netlify.app/",
             linkTitle: "Luna Exclusivos",
           },
           1500
