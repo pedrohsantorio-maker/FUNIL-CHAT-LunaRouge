@@ -13,6 +13,7 @@ interface MessageListProps {
   messages: Message[];
   isTyping: boolean;
   onOptionSelect: (value: string, text: string) => void;
+  onConversion: () => void;
 }
 
 const sterAvatar = placeholderData.placeholderImages.find(
@@ -23,6 +24,7 @@ export const MessageList: FC<MessageListProps> = ({
   messages,
   isTyping,
   onOptionSelect,
+  onConversion,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +43,7 @@ export const MessageList: FC<MessageListProps> = ({
             <div key={message.id}>
               <MessageBubble
                 message={message}
+                onConversion={onConversion}
               />
               {hasOptions && (
                 <div className="flex flex-col items-end gap-2 mt-2 animate-message-in" style={{ animationDelay: '1000ms'}}>

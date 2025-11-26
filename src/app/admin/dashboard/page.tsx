@@ -235,7 +235,7 @@ export default function DashboardPage() {
                         lead.hasConverted && "text-green-500 font-bold"
                       )}
                     >
-                      {lead.currentStep ? `${lead.currentStep}/15` : "N/A"}
+                      {lead.hasConverted ? "Concluído" : (lead.currentStep ? `${lead.currentStep}/15` : "N/A")}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>

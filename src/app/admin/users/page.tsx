@@ -100,7 +100,7 @@ export default function UsersPage() {
                       user.hasConverted && "text-green-500 font-bold"
                     )}
                   >
-                    {user.currentStep ? `${user.currentStep}/15` : "N/A"}
+                    {user.hasConverted ? "Concluído" : (user.currentStep ? `${user.currentStep}/15` : "N/A")}
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>

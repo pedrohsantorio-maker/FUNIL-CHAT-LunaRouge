@@ -23,6 +23,7 @@ export function ChatLayout() {
         messages={memoizedChatFlow.messages}
         isTyping={memoizedChatFlow.isTyping}
         onOptionSelect={(value, text) => memoizedChatFlow.handleOptionSelect(value, text)}
+        onConversion={memoizedChatFlow.handleConversion}
       />
       <ChatInput isTyping={isTyping} />
     </div>
