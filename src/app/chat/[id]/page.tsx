@@ -1,11 +1,14 @@
 "use client";
 
 import { ChatLayout } from "@/components/chat/chat-layout";
+import { FirebaseClientProvider } from "@/firebase/client-provider";
 
 export default function ChatPage() {
   return (
-    <main className="h-screen">
-      <ChatLayout />
-    </main>
+    <FirebaseClientProvider>
+      <main className="h-screen">
+        <ChatLayout />
+      </main>
+    </FirebaseClientProvider>
   );
 }
