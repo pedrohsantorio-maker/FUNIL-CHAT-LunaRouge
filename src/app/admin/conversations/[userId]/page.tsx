@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { Bot, User } from "lucide-react";
 import { useState } from "react";
 import { analyzeConversation } from "@/ai/flows/analyze-conversation-flow";
+import type { AnalyzeConversationOutput } from "@/ai/flows/types";
 import {
   Dialog,
   DialogContent,
@@ -58,11 +59,8 @@ export default function ConversationPage() {
     useCollection(messagesQuery);
 
   const [isAnalysisLoading, setIsAnalysisLoading] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<{
-    summary: string;
-    sentiment: string;
-    suggestions: string[];
-  } | null>(null);
+  const [analysisResult, setAnalysisResult] =
+    useState<AnalyzeConversationOutput | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAnalyze = async () => {
