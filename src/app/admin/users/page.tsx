@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function UsersPage() {
   const firestore = useFirestore();
@@ -94,7 +95,11 @@ export default function UsersPage() {
                         })
                       : "N/A"}
                   </TableCell>
-                  <TableCell>
+                  <TableCell
+                    className={cn(
+                      user.currentStep === 15 && "text-green-500 font-bold"
+                    )}
+                  >
                     {user.currentStep ? `${user.currentStep}/15` : "N/A"}
                   </TableCell>
                   <TableCell>

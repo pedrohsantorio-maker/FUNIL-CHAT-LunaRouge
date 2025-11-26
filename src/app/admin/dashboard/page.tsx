@@ -230,7 +230,11 @@ export default function DashboardPage() {
                         locale: ptBR,
                       })}
                     </TableCell>
-                    <TableCell>
+                    <TableCell
+                      className={cn(
+                        lead.currentStep === 15 && "text-green-500 font-bold"
+                      )}
+                    >
                       {lead.currentStep ? `${lead.currentStep}/15` : "N/A"}
                     </TableCell>
                     <TableCell>
