@@ -33,6 +33,7 @@ import {
   BarChartBig,
   CalendarDays,
   MoreHorizontal,
+  RefreshCw,
 } from "lucide-react";
 import {
   format,
@@ -57,7 +58,8 @@ import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   const [date, setDate] = useState<Date>(new Date());
-  const { stats, dailyLeads, isLoading } = useDashboardStats(date);
+  const { stats, dailyLeads, isLoading, refetchStats } =
+    useDashboardStats(date);
 
   const StatCard = ({
     title,
@@ -95,55 +97,9 @@ export default function DashboardPage() {
     </Card>
   );
 
-  const handleDatePreset = (preset: "today" | "yesterday" | "7d" | "30d") => {
-    const today = new Date();
-    switch (preset) {
-      case "today":
-        setDate(today);
-        break;
-      case "yesterday":
-        setDate(subDays(today, 1));
-        break;
-      case "7d":
-        setDate(subDays(today, 7)); // this will set the start, but our current logic uses single date
-        break;
-      case "30d":
-        setDate(subDays(today, 30)); // this will set the start, but our current logic uses single date
-        break;
-    }
-  };
-
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleDatePreset("today")}
-        >
-          Hoje
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleDatePreset("yesterday")}
-        >
-          Ontem
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleDatePreset("7d")}
-        >
-          7 dias
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleDatePreset("30d")}
-        >
-          30 dias
-        </Button>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -165,6 +121,15 @@ export default function DashboardPage() {
             />
           </PopoverContent>
         </Popover>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={refetchStats}
+          disabled={isLoading}
+        >
+          <RefreshCw className={cn("mr-2 h-4 w-4", isLoading && "animate-spin")} />
+          Atualizar
+        </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -222,13 +187,15 @@ export default function DashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle>Leads do Dia</CardTitle>
+          <CardDescription>
+            Leads que iniciaram uma conversa na data selecionada.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Lead do Dia</TableHead>
-                <TableHead>ID do Usuário</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Início</TableHead>
                 <TableHead>Última Interação</TableHead>
@@ -240,7 +207,7 @@ export default function DashboardPage() {
               {isLoading &&
                 Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={i}>
-                    <TableCell colSpan={7}>
+                    <TableCell colSpan={6}>
                       <Skeleton className="h-8 w-full" />
                     </TableCell>
                   </TableRow>
@@ -251,7 +218,6 @@ export default function DashboardPage() {
                     <TableCell className="font-medium">
                       Lead {String(index + 1).padStart(2, "0")}
                     </TableCell>
-                    <TableCell>{lead.id.substring(0, 8)}...</TableCell>
                     <TableCell>{lead.email || "N/A"}</TableCell>
                     <TableCell>
                       {format(lead.createdAt.toDate(), "dd/MM/yyyy 'às' HH:mm", {
@@ -288,7 +254,7 @@ export default function DashboardPage() {
                 ))}
               {!isLoading && dailyLeads.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center">
+                  <TableCell colSpan={6} className="text-center">
                     Nenhum usuário encontrado para esta data.
                   </TableCell>
                 </TableRow>
