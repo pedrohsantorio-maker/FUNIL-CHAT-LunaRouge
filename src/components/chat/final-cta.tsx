@@ -18,7 +18,7 @@ export function FinalCta({ href, onConversion }: FinalCtaProps) {
           className="w-full h-16 bg-primary text-primary-foreground text-lg font-bold rounded-xl shadow-[0_0_20px_rgba(255,153,0,0.5)] hover:shadow-[0_0_30px_rgba(255,153,0,0.7)] hover:bg-primary/90 transition-all duration-300 animate-[pulse_2s_infinite]"
         >
           <Sparkles className="mr-3 h-6 w-6" />
-          Acessar Conteúdo Exclusivo
+          TER ACESSO AO CONTEÚDO MAIS EXCLUSIVO
           <ArrowRight className="ml-3 h-6 w-6" />
         </Button>
       </Link>
