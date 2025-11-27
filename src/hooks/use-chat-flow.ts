@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -438,7 +439,7 @@ export const useChatFlow = () => {
           1500
         );
         const msg13Content =
-          "Não posso mandar mais fotinhas aqui, mas nesse site tem mais conteúdo gratuito bem sexy só para você, da uma olhada la gostoso, você não vai se arrepender!😘";
+          "clica nesse link para me ver peladinha gozando gostoso 🔥";
         await addBotMessage(
           {
             id: `bot-text-13-${Date.now()}`,
@@ -476,3 +477,5 @@ export const useChatFlow = () => {
 
   return { messages, isTyping, handleOptionSelect, handleConversion, isConversionStep, finalLink };
 };
+
+    
