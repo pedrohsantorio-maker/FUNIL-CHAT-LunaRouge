@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -45,11 +44,15 @@ const calculateTypingDelay = (text: string) => {
   return Math.min(BASE_DELAY + text.length * TYPING_SPEED, 5000);
 };
 
+const FINAL_LINK = "https://lunarouge-vip.netlify.app/";
+
 export const useChatFlow = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [step, setStep] = useState(0);
   const [lastStep, setLastStep] = useState(0); // To handle negative responses
+  const [isConversionStep, setIsConversionStep] = useState(false);
+  const [finalLink, setFinalLink] = useState("");
   const { toast } = useToast();
   const auth = useAuth();
   const firestore = useFirestore();
@@ -425,11 +428,11 @@ export const useChatFlow = () => {
       case 11:
       case 12:
       case 13:
-        await addBotMessage(
+         await addBotMessage(
           {
             id: `bot-link-13-${Date.now()}`,
             type: "link",
-            content: "https://lunarouge-vip.netlify.app/",
+            content: FINAL_LINK,
             linkTitle: "Luna Exclusivos",
           },
           1500
@@ -439,51 +442,13 @@ export const useChatFlow = () => {
         await addBotMessage(
           {
             id: `bot-text-13-${Date.now()}`,
-            type: "options",
+            type: "text",
             content: msg13Content,
-            options: [
-              {
-                text: "Vou olhar agora meu amor, to ansioso para ver você gozando bem gostoso😈",
-                value: "look_now",
-              },
-              {
-                text: "Vou entrar agora, não quero perder seu conteúdo safada😈!",
-                value: "enter_now",
-              },
-            ],
           },
           calculateTypingDelay(msg13Content)
         );
-        break;
-
-      case 14:
-        const msg14Content =
-          "Estou esperando por você, vem ver o que tenho preparado para você... Não vai se arrepender, prometo. DICA: se o gratuito é assim, imagina as fotos e vídeos exclusivos para meus queridos assinantes 😏";
-        await addBotMessage(
-          {
-            id: `bot-final-14-${Date.now()}`,
-            type: "text",
-            content: msg14Content,
-          },
-          calculateTypingDelay(msg14Content)
-        );
-        break;
-
-      case 15: // End of main flow
-        updateUser({ currentStep: 15 });
-      default:
-        // Conversation ended or in an unknown state.
-        // Redirect to link if they keep talking.
-        const msgDefaultContent =
-          "Você é insistente, gostei disso... 😉 Mas o que você quer ver mesmo tá lá no site. Clica no link pra não perder tempo!";
-        await addBotMessage(
-          {
-            id: `bot-redirect-loop-${Date.now()}`,
-            type: "text",
-            content: msgDefaultContent,
-          },
-          calculateTypingDelay(msgDefaultContent)
-        );
+        setIsConversionStep(true);
+        setFinalLink(FINAL_LINK);
         break;
 
       case 99: // Handles "Tem certeza?"
@@ -509,12 +474,5 @@ export const useChatFlow = () => {
     setStep(nextStep);
   };
 
-  return { messages, isTyping, handleOptionSelect, handleConversion };
+  return { messages, isTyping, handleOptionSelect, handleConversion, isConversionStep, finalLink };
 };
-
-    
-    
-
-    
-
-

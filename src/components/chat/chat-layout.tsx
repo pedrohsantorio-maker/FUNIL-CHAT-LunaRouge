@@ -5,9 +5,10 @@ import { ChatHeader } from "./chat-header";
 import { ChatInput } from "./chat-input";
 import { MessageList } from "./message-list";
 import { useMemo } from "react";
+import { FinalCta } from "./final-cta";
 
 export function ChatLayout() {
-  const { messages, isTyping, handleOptionSelect, handleConversion } = useChatFlow();
+  const { messages, isTyping, handleOptionSelect, handleConversion, isConversionStep, finalLink } = useChatFlow();
 
   const memoizedChatFlow = useMemo(() => ({
     messages,
@@ -25,7 +26,11 @@ export function ChatLayout() {
         onOptionSelect={(value, text) => memoizedChatFlow.handleOptionSelect(value, text)}
         onConversion={memoizedChatFlow.handleConversion}
       />
-      <ChatInput isTyping={isTyping} />
+      {isConversionStep ? (
+        <FinalCta href={finalLink} onConversion={handleConversion} />
+      ) : (
+        <ChatInput isTyping={isTyping} />
+      )}
     </div>
   );
 }
